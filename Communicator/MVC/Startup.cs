@@ -30,6 +30,8 @@ namespace MVC
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
+			services.AddCors(); // Make sure you call this previous to AddMvc
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -55,6 +57,11 @@ namespace MVC
 			{
 				routes.MapHub<CommunicatorHub>("/communicator");
 			});
+
+			// Make sure you call this before calling app.UseMvc()
+			app.UseCors(
+				options => options.WithOrigins("*").AllowAnyMethod()
+			);
 
 			app.UseMvc();
 		}
