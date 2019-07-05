@@ -8,9 +8,9 @@ namespace Communicator
 {
     public interface IEventFactory
     {
-        Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc, CancellationToken token);
-        Task<Guid> RaiseEvent(string eventName, string user, byte[] data, CancellationToken token) ;        
-        Task<Guid> RaiseEvent(string eventName, string user, string data, CancellationToken token) ;
+        Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc);
+        Task<Guid> RaiseEvent(string eventName, string user, byte[] data) ;        
+        Task<Guid> RaiseEvent(string eventName, string user, string data) ;
     }
     internal class EventFactory : IEventFactory
     {
@@ -20,19 +20,19 @@ namespace Communicator
             this.Connection = connection;
         }
 
-        public Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc, CancellationToken token)
+        public Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc)
         {            
-            return Connection.InvokeAsync<Guid>("SendXml", eventName, user, doc, token);
+            return Connection.InvokeAsync<Guid>("SendXml", eventName, user, doc);
         }
 
-        public Task<Guid> RaiseEvent(string eventName, string user, byte[] data, CancellationToken token) 
+        public Task<Guid> RaiseEvent(string eventName, string user, byte[] data) 
         {            
-            return Connection.InvokeAsync<Guid>("SendBinary", eventName, user, data,token);
+            return Connection.InvokeAsync<Guid>("SendBinary", eventName, user, data);
         }
         
-        public Task<Guid> RaiseEvent(string eventName, string user, string data, CancellationToken token) 
+        public Task<Guid> RaiseEvent(string eventName, string user, string data) 
         {            
-            return Connection.InvokeAsync<Guid>("SendString", eventName, user, data,token);
+            return Connection.InvokeAsync<Guid>("SendString", eventName, user, data);
         }
     }
 }
