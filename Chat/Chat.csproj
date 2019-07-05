@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <ProjectReference Include="..\Communicator\Communicator.csproj" />
+    
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Communicator" Version="0.0.1" />
   </ItemGroup>
 
   <PropertyGroup>
