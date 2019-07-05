@@ -33,7 +33,7 @@ namespace MVC
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSignalR();
+            services.AddSignalR().AddAzureSignalR("Endpoint=https://communicator.service.signalr.net;AccessKey=FVoKxRuIMszWbe2hgjKPCM9uPGynCowk0uTEU296cRE=;Version=1.0;");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,11 +49,11 @@ namespace MVC
                 app.UseHsts();
             }
 
-            //app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseFileServer();
             app.UseCookiePolicy();
 
-            app.UseSignalR(routes =>
+            app.UseAzureSignalR(routes =>
 			{
 				routes.MapHub<CommunicatorHub>("/communicator");
             });
