@@ -4,19 +4,17 @@ using System.Xml.Serialization;
 
 namespace Communicator
 {
-    public interface IPhrase
-    {
-	string DataCode { get; set; }
-	string TextCode { get; set; }
-	string Data { get; set; }
-    }
     
-    public class Phrase : IPhrase
+    public class Phrase 
     {
 	private string _strData;
 	private string _strDataCode;
 	private string _strTextCode;
-	
+
+	public Phrase()
+	{
+	    
+	}	
 
 	public Phrase(string dataCode, string textCode, string data)
 	{

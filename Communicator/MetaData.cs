@@ -9,21 +9,21 @@ namespace Communicator
     
     public class MetaData
     {
-	public List<IValue> Values { get; set; }
-	public List<IPhrase> Phrases { get; set; }
+	public List<Value> Values { get; set; }
+	public List<Phrase> Phrases { get; set; }
 
 	public MetaData()
 	{
-	    this.Values = new List<IValue>();
-	    this.Phrases = new List<IPhrase>();
+	    this.Values = new List<Value>();
+	    this.Phrases = new List<Phrase>();
 	}
 
-	public IEnumerable<IPhrase> GetPhrases(string dataCode)
+	public IEnumerable<Phrase> GetPhrases(string dataCode)
 	{
 	    return (from f in Phrases where f.DataCode.Equals(dataCode) select f);
 	}
 
-	public IPhrase GetPhrase(string dataCode, string textCode)
+	public Phrase GetPhrase(string dataCode, string textCode)
 	{
 	    return (from f in Phrases where f.DataCode.Equals(dataCode) && f.TextCode.Equals(textCode) select f).FirstOrDefault();
 	}
@@ -35,7 +35,7 @@ namespace Communicator
 
 	public string GetPhraseString(string dataCode, string textCode, string defaultVal)
 	{
-	    IPhrase p = GetPhrase(dataCode, textCode);
+	    Phrase p = GetPhrase(dataCode, textCode);
 	    if (p != null) return p.Data;
 
 	    return defaultVal;

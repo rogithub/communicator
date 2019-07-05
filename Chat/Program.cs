@@ -11,6 +11,35 @@ namespace Chat
 		{
 			Console.Error.WriteLine("Chat [username]");
 		}
+
+		public static MetaData GetChatMetaData(string userName)
+		{
+			MetaData md = new MetaData();
+			md.SetValueString("user", userName);
+			return md;
+		}
+
+		public static MetaData GetFileMetaData(string userName, string path)
+		{
+
+			FileInfo info = new FileInfo(path);
+
+			MetaData md = new MetaData();
+			md.SetValueString("user", userName);
+			md.SetValueString("fileName", info.Name);
+			md.SetValueString("ext", info.Extension);
+
+			return md;
+		}
+
+		public static MetaData GetXmlMetaData(string userName, XmlDocument doc)
+		{
+			MetaData md = new MetaData();
+			md.SetValueString("user", userName);
+			md.SetValueString("content", doc.OuterXml);			
+			return md;
+		}
+
 		static void Main(string[] args)
 		{
 			if (args.Length == 0)
@@ -23,21 +52,27 @@ namespace Chat
 			Console.WriteLine($"Welcome: {userName}");
 
 			string url = "http://localhost:5000/communicator";
-			Server server = new Server(url);
+			EventSource source = new EventSource(url);
+			
 
-			server.HandlerFactory.AddHandler("Chat", (string user, string data) =>
+			source.Handle.String("Chat", (md, data) =>
 			{
+				string user = md.GetValueString("user");
 				Console.WriteLine($"[{user}]: {data}");
 			});
 
-			server.HandlerFactory.AddHandler("File", (string user, byte[] data) =>
+			source.Handle.Binary("File", (md, data) =>
 			{
-				Console.WriteLine($"[{user}]: file length {data.Length}");
+				string user = md.GetValueString("user");
+				string fileName = md.GetValueString("fileName");				
+				Console.WriteLine($"[{user}]: {fileName} length {data.Length}");
 			});
 
-			server.HandlerFactory.AddHandler("Xml", (string user, XmlDocument data) =>
+			source.Handle.Xml("Xml", (md, data) =>
 			{
-				Console.WriteLine($"[{user}]: Xml \n\r {data.OuterXml}");
+				string user = md.GetValueString("user");
+				string content = md.GetValueString("content");
+				Console.WriteLine($"[{user}]: Xml \n\r {content}");
 			});
 
 			string message = "Connected";
@@ -46,8 +81,6 @@ namespace Chat
 
 			while (!exit)
 			{
-				message = Console.ReadLine();
-
 				switch (message)
 				{
 					case "quit":
@@ -59,7 +92,7 @@ namespace Chat
 						if (File.Exists(path))
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
-							server.EventFactory.RaiseEvent("File", userName, bytes);
+							source.Raise.Binary("File", bytes, GetFileMetaData(userName, path));
 						}
 						break;
 					case "xml":
@@ -70,16 +103,18 @@ namespace Chat
 							XmlDocument doc = new XmlDocument();
 							string contents = File.ReadAllText(path);
 							doc.LoadXml(contents);
-							server.EventFactory.RaiseEvent("Xml", userName, doc);
+							source.Raise.Xml("Xml", doc, GetXmlMetaData(userName, doc));
 						}
 						break;
 					default:
-						server.EventFactory.RaiseEvent("Chat", userName, message);
+						source.Raise.String("Chat", message, GetChatMetaData(userName));
 						break;
 				}
+
+				message = Console.ReadLine();
 			}
 
-			server.EventFactory.RaiseEvent("Chat", userName, "Disconnected");
+			source.Raise.String("Chat", "Disconnected", GetChatMetaData(userName));
 		}
 	}
 }

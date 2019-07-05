@@ -4,17 +4,18 @@ using System.Xml.Serialization;
 
 namespace Communicator
 {
-    public interface IValue
-    {
-	string DataCode { get; set; }
-	string Data { get; set; }
-    }
 
-    public class Value: IValue
+    public class Value
     {
 
 	private string _strDataCode;
 	private string _strData;
+
+	public Value()
+	{
+	    
+	}
+	
 	public Value(string dataCode) : this(dataCode, string.Empty)
 	{
 	    
