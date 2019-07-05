@@ -12,13 +12,13 @@ namespace ClientConsole
 			string url = "http://localhost:5000/communicator";
             Server server = new Server(url);
 			
-			server.HandlerFactory.AddHandler("OnResponseXml", (string user, XmlDocument data) =>
+			server.HandlerFactory.AddHandler("ClientConsoleTwo", (string user, XmlDocument data) =>
 			{
-				Console.WriteLine($"{user}: \n\r ${data.OuterXml}");
+				Console.WriteLine($"{user} sent xml: \n\r {data.OuterXml}");
 			});
 
 			CancellationTokenSource ts = new CancellationTokenSource(); 
-			var task = server.EventFactory.RaiseEvent("OnRequestXml", "Rodrigo", "Hello World!", ts.Token);
+			var task = server.EventFactory.RaiseEvent("ClientConsole", "Rodrigo", "Hello World!", ts.Token);
             
 			Guid id = task.GetAwaiter().GetResult();
 			Console.WriteLine($"id: {id}");

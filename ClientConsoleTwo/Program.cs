@@ -14,19 +14,17 @@ namespace ClientConsoleTwo
 			
 			CancellationTokenSource ts = new CancellationTokenSource(); 			
 
-			server.HandlerFactory.AddHandler("OnRequestXml", (string user, string data) =>
+			server.HandlerFactory.AddHandler("ClientConsole", (string user, string data) =>
 			{
-				Console.WriteLine($"user ${user} requested an xml.");
+				Console.WriteLine($"user {user} sent string: {data}");
 			});
 
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml($"<Response>Got Response</Response>");
 
-			var task = server.EventFactory.RaiseEvent("OnResponseXml", "Juan", doc, ts.Token);
+			var task = server.EventFactory.RaiseEvent("ClientConsoleTwo", "Jhon", doc, ts.Token);
 		
 			Guid id = task.GetAwaiter().GetResult();
-			Console.WriteLine($"id: {id}");
-		
 			
 			Console.Read();
         }
