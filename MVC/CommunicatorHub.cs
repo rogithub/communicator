@@ -10,20 +10,20 @@ namespace MVC
 
 	public class CommunicatorHub : Hub
 	{
-		public async Task<Guid> SendXml(string eventName, string user, XmlDocument data)
+		public async Task<Guid> SendXml(string eventName, string metaData, XmlDocument data)
 		{
-			await Clients.Others.SendAsync(eventName, user, data);
+			await Clients.Others.SendAsync(eventName, metaData, data);
 			return Guid.NewGuid();
 		}
-		public async Task<Guid> SendString(string eventName, string user, string  data)
+		public async Task<Guid> SendString(string eventName, string metaData, string  data)
 		{
-			await Clients.Others.SendAsync(eventName, user, data);
+			await Clients.Others.SendAsync(eventName, metaData, data);
 			return Guid.NewGuid();
 		}
 
-		public async Task<Guid> SendBinary(string eventName, string user, byte[] data)
+		public async Task<Guid> SendBinary(string eventName, string metaData, byte[] data)
 		{
-			await Clients.Others.SendAsync(eventName, user, data);
+			await Clients.Others.SendAsync(eventName, metaData, data);
 			return Guid.NewGuid();
 		}
 	}

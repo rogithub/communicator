@@ -7,9 +7,9 @@ namespace Communicator
 
     public interface IHandlerFactory
     {
-        IDisposable Binary(string eventName, Action<string, byte[]> action);
-        IDisposable Xml(string eventName, Action<string, XmlDocument> action);
-        IDisposable String(string eventName, Action<string, string> action) ;    
+        IDisposable Binary(string eventName, Action<MetaData, byte[]> action);
+        IDisposable Xml(string eventName, Action<MetaData, XmlDocument> action);
+        IDisposable String(string eventName, Action<MetaData, string> action) ;    
     }
 
     internal class HandlerFactory : IHandlerFactory
@@ -20,25 +20,32 @@ namespace Communicator
             this.Connection = connection;
         }
 
-        public IDisposable Binary(string eventName, Action<string, byte[]> action)
+        public IDisposable Binary(string eventName, Action<MetaData, byte[]> action)
         {
-            return this.Connection.On<string, byte[]>(eventName, (user, message) => {				
-                action(user, message);
-			});
+            return this.Connection.On<string, byte[]>(eventName, (meta, data) =>
+	    {
+		MetaData metaData = SerializationXml.Deserialize<MetaData>(meta);
+		action(metaData, data);
+	    });
         }
 
-        public IDisposable Xml(string eventName, Action<string, XmlDocument> action)
+        public IDisposable Xml(string eventName, Action<MetaData, XmlDocument> action)
         {
-            return this.Connection.On<string, XmlDocument>(eventName, (user, message) => {				
-                action(user, message);
-			});
+	    return this.Connection.On<string, XmlDocument>(eventName, (meta, data) =>
+	    {
+		MetaData metaData = SerializationXml.Deserialize<MetaData>(meta);
+		action(metaData, data);
+	    });
         }
 
-        public IDisposable String(string eventName, Action<string, string> action) 
+        public IDisposable String(string eventName, Action<MetaData, string> action) 
         {
-            return this.Connection.On<string, string>(eventName, (user, message) => {				
-                action(user, message);
-			});
+	    return this.Connection.On<string, string>(eventName, (meta, data) =>
+	    {
+		MetaData metaData = SerializationXml.Deserialize<MetaData>(meta);
+		action(metaData, data);
+	    });
+            
         }
     }
 }

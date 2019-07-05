@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator
 {
-
-    public class Server 
+    public class EventSource 
     {
         private HubConnection Connection { get; set; }
         public IHandlerFactory Handle {get; private set;}
         public IEventFactory Raise {get; private set;}
-        public Server(string urlServer)
+        public EventSource(string urlServer)
         {
             this.Connection = ConnectionBuilder.Build(urlServer);
             this.Handle = new HandlerFactory(this.Connection);
