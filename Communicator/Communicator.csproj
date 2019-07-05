@@ -7,9 +7,11 @@
     <Authors>Rodrigo Jimenez</Authors>
     <Company>ro-mx</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
   </ItemGroup>
 
