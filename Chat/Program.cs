@@ -5,14 +5,14 @@ using System.Xml;
 
 namespace Chat
 {
-    class Program
-    {
+	class Program
+	{
 		public static void PrintHelp()
 		{
 			Console.Error.WriteLine("Chat [username]");
 		}
-        static void Main(string[] args)
-        {
+		static void Main(string[] args)
+		{
 			if (args.Length == 0)
 			{
 				PrintHelp();
@@ -22,9 +22,9 @@ namespace Chat
 			string userName = args[0];
 			Console.WriteLine($"Welcome: {userName}");
 
-            string url = "http://localhost:5000/communicator";
-            Server server = new Server(url);
-			
+			string url = "http://localhost:5000/communicator";
+			Server server = new Server(url);
+
 			server.HandlerFactory.AddHandler("Chat", (string user, string data) =>
 			{
 				Console.WriteLine($"[{user}]: {data}");
@@ -43,40 +43,43 @@ namespace Chat
 			string message = "Connected";
 			string path = string.Empty;
 			bool exit = false;
-			
-			while(!exit) {				
+
+			while (!exit)
+			{
 				message = Console.ReadLine();
-				
-				switch(message)
+
+				switch (message)
 				{
 					case "quit":
 						exit = true;
-					break;
+						break;
 					case "file":
 						Console.WriteLine("Enter path:");
 						path = Console.ReadLine();
-						if (File.Exists(path)) {					
-							byte[] bytes = System.IO.File.ReadAllBytes(path);		
+						if (File.Exists(path))
+						{
+							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							server.EventFactory.RaiseEvent("File", userName, bytes);
 						}
-					break;
+						break;
 					case "xml":
 						Console.WriteLine("Enter path:");
 						path = Console.ReadLine();
-						if (File.Exists(path)) {
+						if (File.Exists(path))
+						{
 							XmlDocument doc = new XmlDocument();
 							string contents = File.ReadAllText(path);
 							doc.LoadXml(contents);
 							server.EventFactory.RaiseEvent("Xml", userName, doc);
 						}
-					break;
+						break;
 					default:
 						server.EventFactory.RaiseEvent("Chat", userName, message);
-					break;
+						break;
 				}
 			}
 
 			server.EventFactory.RaiseEvent("Chat", userName, "Disconnected");
-        }
-    }
+		}
+	}
 }
