@@ -13,9 +13,9 @@ namespace ClientConsole
 				.Build();
 
 
-			connection.StartAsync().Wait();
+			connection.StartAsync();
 
-			connection.InvokeAsync<string>("SendMessage", "Rodrigo", "Hola Mundo").ContinueWith(task =>
+			connection.InvokeAsync<string>("SendMessage", "Rodrigo Client", "Hola ").ContinueWith(task =>
 			{
 				if (task.IsFaulted)
 				{
@@ -25,9 +25,15 @@ namespace ClientConsole
 				else
 				{
 					
+					Console.WriteLine("Message Sent");
 					Console.WriteLine(task.Result);
 				}
-			}).GetAwaiter().GetResult();
+			});
+
+			connection.On<string, string>("ReceiveMessage", (user, message) => {
+				var newMessage = $"{user}: {message}";
+				Console.WriteLine(newMessage);
+			});
 
             Console.Read();
         }
