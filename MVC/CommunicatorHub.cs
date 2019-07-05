@@ -21,12 +21,6 @@ namespace MVC
 			return Guid.NewGuid();
 		}
 
-		public async Task<Guid> SendJson<T>(string eventName, string user, T data) where  T : new ()
-		{
-			await Clients.Others.SendAsync(eventName, user, data);
-			return Guid.NewGuid();
-		}
-
 		public async Task<Guid> SendBinary(string eventName, string user, byte[] data)
 		{
 			await Clients.Others.SendAsync(eventName, user, data);

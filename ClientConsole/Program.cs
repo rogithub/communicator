@@ -1,5 +1,7 @@
 ﻿using System;
-using Microsoft.AspNetCore.SignalR.Client;
+using Communicator;
+using System.Threading;
+using System.Xml;
 
 namespace ClientConsole
 {
@@ -7,35 +9,21 @@ namespace ClientConsole
     {
         static void Main(string[] args)
         {
-            //Set connection
-			var connection = new HubConnectionBuilder()
-				.WithUrl("http://localhost:5000/communicator")
-				.Build();
-
-
-			connection.StartAsync();
-
-			connection.InvokeAsync<string>("SendMessage", "Rodrigo Client", "Hola ").ContinueWith(task =>
+			string url = "http://localhost:5000/communicator";
+            Server server = new Server(url);
+			
+			server.HandlerFactory.AddHandler("OnResponseXml", (string user, XmlDocument data) =>
 			{
-				if (task.IsFaulted)
-				{
-					Console.WriteLine("There was an error calling send: {0}",
-									  task.Exception.GetBaseException());
-				}
-				else
-				{
-					
-					Console.WriteLine("Message Sent");
-					Console.WriteLine(task.Result);
-				}
+				Console.WriteLine($"{user}: \n\r ${data.OuterXml}");
 			});
 
-			connection.On<string, string>("ReceiveMessage", (user, message) => {
-				var newMessage = $"{user}: {message}";
-				Console.WriteLine(newMessage);
-			});
-
-            Console.Read();
+			CancellationTokenSource ts = new CancellationTokenSource(); 
+			var task = server.EventFactory.RaiseEvent("OnRequestXml", "Rodrigo", "Hello World!", ts.Token);
+            
+			Guid id = task.GetAwaiter().GetResult();
+			Console.WriteLine($"id: {id}");
+			
+			Console.Read();
         }
     }
 }

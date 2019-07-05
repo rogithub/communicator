@@ -9,7 +9,6 @@ namespace Communicator
     {
         IDisposable AddHandler(string eventName, Action<string, byte[]> action);
         IDisposable AddHandler(string eventName, Action<string, XmlDocument> action);
-        IDisposable AddHandler<T>(string eventName, Action<string, T> action) where T : new();
         IDisposable AddHandler(string eventName, Action<string, string> action) ;    
     }
 
@@ -31,13 +30,6 @@ namespace Communicator
         public IDisposable AddHandler(string eventName, Action<string, XmlDocument> action)
         {
             return this.Connection.On<string, XmlDocument>(eventName, (user, message) => {				
-                action(user, message);
-			});
-        }
-
-        public IDisposable AddHandler<T>(string eventName, Action<string, T> action) where T : new()
-        {
-            return this.Connection.On<string, T>(eventName, (user, message) => {				
                 action(user, message);
 			});
         }

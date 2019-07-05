@@ -9,9 +9,7 @@ namespace Communicator
     public interface IEventFactory
     {
         Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc, CancellationToken token);
-        Task<Guid> RaiseEvent<T>(string eventName, string user, T json, CancellationToken token)  where  T : new () ;
-        Task<Guid> RaiseEvent(string eventName, string user, byte[] data, CancellationToken token) ;
-        
+        Task<Guid> RaiseEvent(string eventName, string user, byte[] data, CancellationToken token) ;        
         Task<Guid> RaiseEvent(string eventName, string user, string data, CancellationToken token) ;
     }
     internal class EventFactory : IEventFactory
@@ -25,11 +23,6 @@ namespace Communicator
         public Task<Guid> RaiseEvent(string eventName, string user, XmlDocument doc, CancellationToken token)
         {            
             return Connection.InvokeAsync<Guid>("SendXml", eventName, user, doc, token);
-        }
-
-        public Task<Guid> RaiseEvent<T>(string eventName, string user, T json, CancellationToken token)  where  T : new ()     
-        {            
-            return Connection.InvokeAsync<Guid>("SendJson", eventName, user, json, token);
         }
 
         public Task<Guid> RaiseEvent(string eventName, string user, byte[] data, CancellationToken token) 
