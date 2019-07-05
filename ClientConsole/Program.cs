@@ -11,19 +11,21 @@ namespace ClientConsole
         {
 			string url = "http://localhost:5000/communicator";
             Server server = new Server(url);
+			CancellationTokenSource ts = new CancellationTokenSource(); 
 			
-			server.HandlerFactory.AddHandler("ClientConsoleTwo", (string user, XmlDocument data) =>
+			server.HandlerFactory.AddHandler("Chat", (string user, string data) =>
 			{
-				Console.WriteLine($"{user} sent xml: \n\r {data.OuterXml}");
+				Console.WriteLine($"[{user}]: {data}");
 			});
 
-			CancellationTokenSource ts = new CancellationTokenSource(); 
-			var task = server.EventFactory.RaiseEvent("ClientConsole", "Rodrigo", "Hello World!", ts.Token);
-            
-			Guid id = task.GetAwaiter().GetResult();
-			Console.WriteLine($"id: {id}");
+			string message = "Connected";
+			while(message != "quit") {				
+				server.EventFactory.RaiseEvent("Chat", "Console", message, ts.Token);
+				message = Console.ReadLine();
+			}
+					
+			server.EventFactory.RaiseEvent("Chat", "Console", "Disconnected", ts.Token);
 			
-			Console.Read();
         }
     }
 }
