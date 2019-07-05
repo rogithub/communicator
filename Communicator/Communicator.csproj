@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Communicator</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Rodrigo Jimenez</Authors>
+    <Company>ro-mx</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
