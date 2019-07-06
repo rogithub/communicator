@@ -57,6 +57,12 @@ namespace Chat
 			Users[userName] = connectionId;
 		}
 
+		private static string Prompt(string prompt)
+		{			
+			Console.Write($"{prompt}");
+			return Console.ReadLine();
+		}
+
 		static void Main(string[] args)
 		{
 			if (args.Length == 0)
@@ -70,40 +76,41 @@ namespace Chat
 
 			string url = "http://localhost:5000/communicator";
 			EventSource source = new EventSource(url);			
-			Console.WriteLine($"Welcome: {userName}");
+			Console.WriteLine($"Welcome: {userName}!");
 
 			source.Connect(GetChatMetaData(userName)).GetAwaiter().GetResult();
 			
 			source.Handle.OnConnected((md, connectionId)=> {
 				string user = md.GetValueString("user");				
 				AddUser(connectionId, user);
-				Console.WriteLine($"{user}: {connectionId}");
+
+				Console.WriteLine($"{user} Connected!");
 			});
 
 			source.Handle.String("Chat", (md, data) =>
 			{
 				string user = md.GetValueString("user");
-				Console.WriteLine($"[{user}]: {data}");
+				Console.WriteLine($"[{user}]: {data} {Environment.NewLine}>>:");
 			});
 
 			source.Handle.String("ChatTo", (md, data) =>
 			{
 				string user = md.GetValueString("user");
-				Console.WriteLine($"[{user}]: {data}");
+				Console.WriteLine($"[{user}]: {data}{Environment.NewLine}>>:");
 			});
 
 			source.Handle.Binary("File", (md, data) =>
 			{
 				string user = md.GetValueString("user");				
 				string fileName = md.GetValueString("fileName");				
-				Console.WriteLine($"[{user}]: {fileName} length {data.Length}");
+				Console.WriteLine($"[{user}]: {fileName} length {data.Length}{Environment.NewLine}>>:");
 			});
 
 			source.Handle.Xml("Xml", (md, data) =>
 			{
 				string user = md.GetValueString("user");
 				string content = md.GetValueString("content");
-				Console.WriteLine($"[{user}]: Xml \n\r {content}");
+				Console.WriteLine($"[{user}]: Xml \n\r {content}{Environment.NewLine}>>:");
 			});
 
 			string message = "Connected";
@@ -111,16 +118,17 @@ namespace Chat
 			string to = string.Empty;
 			bool exit = false;
 
-			while (!exit)
+			do
 			{
+				message = Prompt(">>: ");
+
 				switch (message)
 				{
 					case "quit":
 						source.Raise.String("Chat", "Disconnected", GetChatMetaData(userName));
 						return;
 					case "file":
-						Console.WriteLine("Enter path:");
-						path = Console.ReadLine();
+						path = Prompt("Enter path: ");
 						if (File.Exists(path))
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
@@ -128,8 +136,7 @@ namespace Chat
 						}
 						break;
 					case "xml":
-						Console.WriteLine("Enter path:");
-						path = Console.ReadLine();
+						path = Prompt("Enter path: ");						
 						if (File.Exists(path))
 						{
 							XmlDocument doc = new XmlDocument();
@@ -139,12 +146,12 @@ namespace Chat
 						}
 						break;
 					case "to":
-						string user = Console.ReadLine();
+						string user = Prompt("Send private message to: ");
 						to = string.Empty;
 						Users.TryGetValue(user, out to);
 						if (!string.IsNullOrWhiteSpace(to))
 						{
-							message = Console.ReadLine();							
+							message = Prompt($"Private message for {user}: ");
 							source.Raise.StringTo("ChatTo", to, message, GetChatToMetaData(userName, to));
 						}else
 						{
@@ -154,10 +161,9 @@ namespace Chat
 					default:
 						source.Raise.String("Chat", message, GetChatMetaData(userName));
 						break;
-				}
-
-				message = Console.ReadLine();
-			}
+				}				
+			} 
+			while (!exit);
 		}
 	}
 }
