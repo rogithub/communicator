@@ -39,7 +39,6 @@ namespace MVC
 		}
 		public async Task<Guid> SendStringTo(string connectionId, string eventName, string metaData, string data)
 		{
-			Console.WriteLine($"event:{eventName} to id: {connectionId} data: {data}");
 			await Clients.Client(connectionId).SendAsync(eventName, metaData, data);
 			return Guid.NewGuid();
 		}
