@@ -57,10 +57,17 @@ namespace Chat
 			Users[userName] = connectionId;
 		}
 
+		private static string DefaultPrompt {get; set;}
+
 		private static string Prompt(string prompt)
 		{			
 			Console.Write($"{prompt}");
 			return Console.ReadLine();
+		}
+
+		private static void Print(string message)
+		{			
+			Console.Write($"{Environment.NewLine}{message}{Environment.NewLine}{DefaultPrompt}");
 		}
 
 		static void Main(string[] args)
@@ -77,6 +84,7 @@ namespace Chat
 			string url = "http://localhost:5000/communicator";
 			EventSource source = new EventSource(url);			
 			Console.WriteLine($"Welcome: {userName}!");
+			DefaultPrompt = $"[{userName}]: ";
 
 			source.Connect(GetChatMetaData(userName)).GetAwaiter().GetResult();
 			
@@ -84,33 +92,33 @@ namespace Chat
 				string user = md.GetValueString("user");				
 				AddUser(connectionId, user);
 
-				Console.WriteLine($"{user} Connected!");
+				Print($"{user} Connected!");
 			});
 
 			source.Handle.String("Chat", (md, data) =>
 			{
 				string user = md.GetValueString("user");
-				Console.WriteLine($"[{user}]: {data} {Environment.NewLine}>>:");
+				Print($"{user}: {data}");
 			});
 
 			source.Handle.String("ChatTo", (md, data) =>
 			{
 				string user = md.GetValueString("user");
-				Console.WriteLine($"[{user}]: {data}{Environment.NewLine}>>:");
+				Print($"{user}: {data}");
 			});
 
 			source.Handle.Binary("File", (md, data) =>
 			{
 				string user = md.GetValueString("user");				
 				string fileName = md.GetValueString("fileName");				
-				Console.WriteLine($"[{user}]: {fileName} length {data.Length}{Environment.NewLine}>>:");
+				Print($"{user}: {fileName} length {data.Length}");
 			});
 
 			source.Handle.Xml("Xml", (md, data) =>
 			{
 				string user = md.GetValueString("user");
 				string content = md.GetValueString("content");
-				Console.WriteLine($"[{user}]: Xml \n\r {content}{Environment.NewLine}>>:");
+				Print($"{user}: Xml {Environment.NewLine} {content} {Environment.NewLine}");
 			});
 
 			string message = "Connected";
@@ -120,10 +128,13 @@ namespace Chat
 
 			do
 			{
-				message = Prompt(">>: ");
+				message = Prompt($"{Environment.NewLine}{DefaultPrompt}");
 
 				switch (message)
 				{
+					case "clear":
+						Console.Clear();
+						break;
 					case "quit":
 						source.Raise.String("Chat", "Disconnected", GetChatMetaData(userName));
 						return;
