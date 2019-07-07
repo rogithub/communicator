@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Communicator;
 using System.IO;
 using System.Xml;
@@ -52,12 +53,17 @@ namespace Chat
 		{	
 			if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(id))
 			{
-				if (!Users.ContainsKey(user)) {					
-					Users.Add(user, id);					
+				if (!Users.ContainsKey(id)) {
+					Users.Add(id, user);					
 				}
 
-				Users[user] = id;
+				Users[id] = user;
 			}
+		}
+
+		private static string FindId(string user)
+		{	
+			return Users.FirstOrDefault( it => it.Value == user ).Key;
 		}
 
 		private static string DefaultPrompt {get; set;}
@@ -94,6 +100,11 @@ namespace Chat
 			SetUser(mtdt, userName);
 			AddUser(userName, source.ConnectionId);
 			Console.WriteLine($"Welcome: {userName}!");
+
+			source.Handle.OnDisconnected( id =>
+			{
+				Users.Remove(id);
+			});
 
 			source.Handle.String("Chat", (md, data) =>
 			{
@@ -170,8 +181,7 @@ namespace Chat
 						break;
 					case "to":
 						string user = Prompt("Send private message to: ");
-						to = string.Empty;
-						Users.TryGetValue(user, out to);
+						to = FindId(user);
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = Prompt($"Private message for {user}: ");
