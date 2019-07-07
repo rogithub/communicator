@@ -67,7 +67,7 @@ namespace Chat
 				$"{user}: Xml {Environment.NewLine} {content} {Environment.NewLine}".Print();
 			});
 
-			source.Handle.Json<Person>("person", (md, data) =>
+			source.Handle.Json<Person>("Person", (md, data) =>
 			{
 				Connections.AddUser(md);
 				string user = md.GetValueString("user");				
