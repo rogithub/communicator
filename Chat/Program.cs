@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
 using Communicator;
 using System.IO;
 using System.Xml;
-using System.Collections.Generic;
 
 namespace Chat
 {
-	class Program
+    class Program
 	{		
 
 		private static ActiveConnections Connections { get; set; }
