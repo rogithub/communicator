@@ -67,6 +67,13 @@ namespace Chat
 				$"{user}: Xml {Environment.NewLine} {content} {Environment.NewLine}".Print();
 			});
 
+			source.Handle.Json<Person>("person", (md, data) =>
+			{
+				Connections.AddUser(md);
+				string user = md.GetValueString("user");				
+				$"{user}: Person {{ Name = {data.Name}, Age = {data.Age} }}".Print();
+			});
+
 			string message = "Connected";
 			string path = string.Empty;
 			string to = string.Empty;
@@ -118,6 +125,14 @@ namespace Chat
 						{
 							Console.WriteLine($"User not found: {user}");
 						}
+					break;
+					case "person":
+						string name = "Person Name: ".Prompt();
+						string ageStr = "Person Age: ".Prompt();
+						int age = 0;
+						int.TryParse(ageStr.Trim(), out age);
+						Person p = new Person() { Name = name, Age = age };
+						source.Raise.SendJson("Person", p, mtdt);
 					break;
 					default:
 						source.Raise.String("Chat", message, mtdt);
