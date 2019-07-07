@@ -8,10 +8,6 @@ namespace Communicator
 	[DataContract]
     public class Value
     {
-
-		private string _strDataCode;
-		private string _strData;
-
 		public Value()
 		{
 			
@@ -32,18 +28,9 @@ namespace Communicator
 		}
 
 		[DataMember]
-		public string DataCode
-		{
-			get { return _strDataCode; }
-			set { _strDataCode = value; }	    
-		}
+		public string DataCode { get; set; }
 
 		[DataMember]  
-		public string Data
-		{
-			get { return _strData; }
-			set { _strData = value; }
-			
-		}	
+		public string Data { get; set; }
     }
 }

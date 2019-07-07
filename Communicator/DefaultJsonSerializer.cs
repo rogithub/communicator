@@ -4,10 +4,9 @@ using System.Text;
 
 namespace Communicator
 {
-    internal static class SerializationJson
+    internal class DefaultJsonSerializer : IStringSerializer, IStringDeserializer
     {
-
-		public static T Deserialize<T>(this string json)
+		public T Deserialize<T>(string json)
 		{
 			
 			using(MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
@@ -20,7 +19,7 @@ namespace Communicator
 			}			
 		}
 
-		public static string Serialize<T>(T cSharpObj)
+		public string Serialize<T>(T cSharpObj)
 		{
 			using (MemoryStream ms = new MemoryStream())
 			{   
