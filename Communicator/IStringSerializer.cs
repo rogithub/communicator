@@ -7,6 +7,6 @@ namespace Communicator
 
 	public interface IStringDeserializer
 	{
-		T Deserialize<T>(string json);
+		T Deserialize<T>(string serializedObj);
 	}
 }
