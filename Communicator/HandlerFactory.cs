@@ -7,7 +7,7 @@ namespace Communicator
 
     public interface IHandlerFactory
     {
-        IDisposable OnConnected(Action<MetaData, string> action);
+        IDisposable OnConnected(Action<string> action);
         IDisposable OnDisconnected(Action<string> actionConnectionId);
         IDisposable Binary(string eventName, Action<MetaData, byte[]> action);
         IDisposable Xml(string eventName, Action<MetaData, XmlDocument> action);
@@ -56,9 +56,9 @@ namespace Communicator
             return this.Connection.On<string>(EventNames.OnDisconnected, actionConnectionId);
         }
 
-        public IDisposable OnConnected(Action<MetaData, string> action)
+        public IDisposable OnConnected(Action<string> actionConnectionId)
         {
-            return String(EventNames.OnConnected, action);
+            return this.Connection.On<string>(EventNames.OnConnected, actionConnectionId);
         }
     }
 }

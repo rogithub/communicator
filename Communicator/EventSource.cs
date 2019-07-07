@@ -19,25 +19,18 @@ namespace Communicator
             this.Raise = new EventFactory(this.Connection);            
         }
 
-        public async Task<Guid> Connect(MetaData md)
-        {
-            Guid eventId;
+        public async Task<string> Connect()
+        {            
+            //Connection.Closed += async (error) =>
+            //{
+            //    await Task.Delay(new Random().Next(0,5) * 1000);
+            //    await Connection.StartAsync();
+            //};
+
+            await Connection.StartAsync();
+            ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);
             
-            Action<Task> setId = async (t) => {
-                string id = await Connection.InvokeAsync<string>(EventNames.GetConnectionId); 
-                this.ConnectionId = id;                
-                eventId = await this.Raise.String(EventNames.OnConnected, id, md);
-            };
-
-            await Connection.StartAsync().ContinueWith(setId);
-
-            Connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0,5) * 1000);
-                await Connection.StartAsync().ContinueWith(setId);
-            };
-
-            return eventId;
+            return ConnectionId;
         }
     }
 }

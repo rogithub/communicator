@@ -14,6 +14,12 @@ namespace MVC
 			return Context.ConnectionId;
 		}
 		
+		public override async Task OnConnectedAsync()
+		{			
+			await base.OnConnectedAsync();
+			await Clients.Others.SendAsync("Communicator.OnConnected", Context.ConnectionId);
+		}
+
 		public override async Task OnDisconnectedAsync(Exception ex)
 		{			
 			await base.OnDisconnectedAsync(ex);
