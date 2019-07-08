@@ -1,12 +1,12 @@
 ﻿using System;
 using Communicator;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Chat
 {
     class Program
-	{		
-
+	{				
 		private static ActiveConnections Connections { get; set; }
 		static void Main(string[] args)
 		{
@@ -21,9 +21,9 @@ namespace Chat
 			
 
 			string url = "http://localhost:5000/communicator";
-			IEventSource<MetaData> source = EventSourceFactory.Get<MetaData>(url, new JsonSerializer());
+			IEventSource<List<Value>> source = EventSourceFactory.Get<List<Value>>(url, new JsonSerializer());
 			
-			MetaData mtdt = new MetaData();
+			List<Value> mtdt = new List<Value>();
 			source.Connect().GetAwaiter().GetResult();
 			
 			mtdt.SetId(source.ConnectionId);

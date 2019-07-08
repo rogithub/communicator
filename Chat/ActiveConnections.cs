@@ -1,8 +1,7 @@
-
-using Communicator;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Communicator;
 
 namespace Chat
 {
@@ -11,7 +10,7 @@ namespace Chat
     {
         private Dictionary<string, string> Users = new Dictionary<string, string>();
 
-		public void AddUser(MetaData md)
+		public void AddUser(IEnumerable<Value> md)
 		{
 			string user = md.Get("user");
 			string id = md.Get("id");
