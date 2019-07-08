@@ -1,10 +1,11 @@
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using Communicator;
 
-namespace Communicator
+namespace Chat
 {
-    internal class DefaultJsonSerializer : IDataSerializer
+    internal class JsonSerializer : IDataSerializer
     {
 		public T Deserialize<T>(string json)
 		{

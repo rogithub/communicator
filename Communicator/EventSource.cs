@@ -12,15 +12,10 @@ namespace Communicator
     }
 
     public static class EventSourceFactory
-    {
-        public static IEventSource<T> Get<T>(string urlServer)
+    {       
+        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer dataSerializer)
         {
-            return new EventSource<T>(urlServer, new DefaultJsonSerializer());
-        }
-
-        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer defaultSerializer)
-        {
-            return new EventSource<T>(urlServer, defaultSerializer);
+            return new EventSource<T>(urlServer, dataSerializer);
         }
     }
 

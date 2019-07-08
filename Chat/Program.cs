@@ -21,7 +21,7 @@ namespace Chat
 			
 
 			string url = "http://localhost:5000/communicator";
-			IEventSource<MetaData> source = EventSourceFactory.Get<MetaData>(url);
+			IEventSource<MetaData> source = EventSourceFactory.Get<MetaData>(url, new JsonSerializer());
 			
 			MetaData mtdt = new MetaData();
 			source.Connect().GetAwaiter().GetResult();
