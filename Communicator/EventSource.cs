@@ -1,39 +1,44 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
-using System;
 
 namespace Communicator
 {
-    public interface IEventSource
+    public interface IEventSource<T>
     {
-        IHandlerFactory Handle { get; }
-        IEventFactory Send { get; }
+        IHandlerFactory<T> Handle { get; }
+        IEventFactory<T> Send { get; }
         string ConnectionId { get; }
         Task<string> Connect();
     }
 
     public static class EventSourceFactory
     {
-        public static IEventSource Get (string urlServer)
+        public static IEventSource<T> Get<T>(string urlServer)
         {
-            return new EventSource(urlServer);
+            return new EventSource<T>(urlServer, new DefaultJsonSerializer());
+        }
+
+        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer defaultSerializer)
+        {
+            return new EventSource<T>(urlServer, defaultSerializer);
         }
     }
 
 
-    internal class EventSource : IEventSource
+    internal class EventSource<T> : IEventSource<T>
     {
         private HubConnection Connection { get; set; }
-        public IHandlerFactory Handle {get; private set;}
-        public IEventFactory Send {get; private set;}
+        public IHandlerFactory<T> Handle {get; private set;}
+        public IEventFactory<T> Send {get; private set;}
+        public IDataSerializer DataSerializer {get; private set;}
 
         public string ConnectionId {get; private set;}
 
-        public EventSource(string urlServer)
+        public EventSource(string urlServer, IDataSerializer serializer)
         {
             this.Connection = ConnectionBuilder.Build(urlServer);
-            this.Handle = new HandlerFactory(this.Connection);
-            this.Send = new EventFactory(this.Connection);            
+            this.Handle = new HandlerFactory<T>(this.Connection, serializer);
+            this.Send = new EventFactory<T>(this.Connection, serializer);
         }
 
         public async Task<string> Connect()

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Communicator
 {
-    internal class DefaultJsonSerializer : IStringSerializer, IStringDeserializer
+    internal class DefaultJsonSerializer : IDataSerializer
     {
 		public T Deserialize<T>(string json)
 		{
