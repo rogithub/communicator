@@ -4,7 +4,24 @@ using System;
 
 namespace Communicator
 {
-    public class EventSource 
+    public interface IEventSource
+    {
+        IHandlerFactory Handle { get; }
+        IEventFactory Send { get; }
+        string ConnectionId { get; }
+        Task<string> Connect();
+    }
+
+    public static class EventSourceFactory
+    {
+        public static IEventSource Get (string urlServer)
+        {
+            return new EventSource(urlServer);
+        }
+    }
+
+
+    internal class EventSource : IEventSource
     {
         private HubConnection Connection { get; set; }
         public IHandlerFactory Handle {get; private set;}
