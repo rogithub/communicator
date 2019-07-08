@@ -9,7 +9,7 @@ namespace Communicator
         Task<Guid> Binary(string eventName, byte[] data, MetaData meta);
         Task<Guid> String(string eventName, string data, MetaData meta);
         Task<Guid> Json<T>(string eventName, T data, MetaData meta);
-        Task<Guid> Serialized<T>(string eventName, T data, MetaData meta, IStringSerializer serializer);
+        Task<Guid> Serialized<T>(string eventName, T data, MetaData meta, Func<T, string> serializer);
         Task<Guid> StringTo(string eventName, string connectionId, string data, MetaData meta);
     }
     internal class EventFactory : IEventFactory
@@ -24,12 +24,12 @@ namespace Communicator
            
         public Task<Guid> Json<T>(string eventName, T data, MetaData meta)
         {
-            return Serialized(eventName, data, meta, JsonSerializer);
+            return Serialized(eventName, data, meta, (d) => JsonSerializer.Serialize(d));
         }
 
-        public Task<Guid> Serialized<T>(string eventName, T data, MetaData meta, IStringSerializer serializer)
+        public Task<Guid> Serialized<T>(string eventName, T data, MetaData meta, Func<T, string> serializer)
         {
-            return Connection.InvokeAsync<Guid>(EventNames.SendString, eventName, JsonSerializer.Serialize(meta), serializer.Serialize(data));
+            return Connection.InvokeAsync<Guid>(EventNames.SendString, eventName, JsonSerializer.Serialize(meta), serializer(data));
         }
 
         public Task<Guid> Binary(string eventName, byte[] data, MetaData meta) 

@@ -1,4 +1,3 @@
-using System.Xml;
 using System;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -12,7 +11,7 @@ namespace Communicator
         IDisposable Binary(string eventName, Action<MetaData, byte[]> getData);
         IDisposable String(string eventName, Action<MetaData, string> getData);
         IDisposable Json<T>(string eventName, Action<MetaData, T> getData);
-        IDisposable Serialized<T>(string eventName, IStringDeserializer serializer, Action<MetaData, T> getData);
+        IDisposable Serialized<T>(string eventName, Func<string, T> deserializer, Action<MetaData, T> getData);
     }
 
     internal class HandlerFactory : IHandlerFactory
@@ -27,15 +26,15 @@ namespace Communicator
 
         public IDisposable Json<T>(string eventName, Action<MetaData, T> getData)
         {
-            return this.Serialized(eventName, JsonSerializer, getData);
+            return this.Serialized(eventName, d => JsonSerializer.Deserialize<T>(d), getData);
         }
 
-        public IDisposable Serialized<T>(string eventName, IStringDeserializer serializer, Action<MetaData, T> getData)
+        public IDisposable Serialized<T>(string eventName, Func<string, T> deserializer, Action<MetaData, T> getData)
         {
             return this.Connection.On<string, string>(eventName, (meta, json) =>
             {
-                MetaData metaData = serializer.Deserialize<MetaData>(meta);
-                T data = serializer.Deserialize<T>(json);
+                MetaData metaData = JsonSerializer.Deserialize<MetaData>(meta);
+                T data = deserializer(json);
                 getData(metaData, data);
             });
         }
