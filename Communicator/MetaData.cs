@@ -33,22 +33,22 @@ namespace Communicator
     {	
 		public static bool Exists(this IEnumerable<MetaData> list, string key)
 		{			
-			return list.Where(i => i.Key.Equals(key)).Count() > 0;
+			return list.Where(i => i.Key.Equals(key)).Count() > 0;						
 		}
 
 		public static string Get(this IEnumerable<MetaData> list, string key, string defaultVal)
-		{
+		{		
 			if (!Exists(list, key)) return defaultVal;
 			return (from i in list where  i.Key.Equals(key) select i).First().Value;
 		}
 
 		public static string Get(this IEnumerable<MetaData> list, string key)
-		{
-			return Get(list, string.Empty);
+		{		
+			return Get(list, key, string.Empty);
 		}
 
 		public static void Set(this List<MetaData> list, string key, string value)
-		{
+		{		
 			if (Exists(list, key)) list.RemoveAll(i => i.Key.Equals(key));
 			var newItem = new MetaData(key, value);
 			list.Add(newItem);
