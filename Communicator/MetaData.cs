@@ -5,7 +5,7 @@ using System;
 
 namespace Communicator
 {
-    [Serializable]
+    [DataContract]
     public struct MetaData
     {		
 		public MetaData(string key) : this(key, string.Empty)
