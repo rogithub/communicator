@@ -1,7 +1,5 @@
 
 using System;
-using System.Xml;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
@@ -24,13 +22,7 @@ namespace MVC
 		{			
 			await base.OnDisconnectedAsync(ex);
 			await Clients.Others.SendAsync("Communicator.OnDisconnected", Context.ConnectionId);
-		}
-
-		public async Task<Guid> SendXml(string eventName, string metaData, XmlDocument data)
-		{
-			await Clients.Others.SendAsync(eventName, metaData, data);
-			return Guid.NewGuid();
-		}
+		}		
 
 		public async Task<Guid> SendBinary(string eventName, string metaData, byte[] data)
 		{

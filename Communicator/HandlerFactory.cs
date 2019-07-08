@@ -10,7 +10,6 @@ namespace Communicator
         IDisposable OnConnected(Action<string> getConnId);
         IDisposable OnDisconnected(Action<string> getConnId);
         IDisposable Binary(string eventName, Action<MetaData, byte[]> getData);
-        IDisposable Xml(string eventName, Action<MetaData, XmlDocument> getData);
         IDisposable String(string eventName, Action<MetaData, string> getData);
         IDisposable Json<T>(string eventName, Action<MetaData, T> getData);
         IDisposable Serialized<T>(string eventName, IStringDeserializer serializer, Action<MetaData, T> getData);
@@ -49,16 +48,7 @@ namespace Communicator
                 getData(metaData, data);
             });
         }
-
-        public IDisposable Xml(string eventName, Action<MetaData, XmlDocument> getData)
-        {
-            return this.Connection.On<string, XmlDocument>(eventName, (meta, data) =>
-            {
-                MetaData metaData = JsonSerializer.Deserialize<MetaData>(meta);
-                getData(metaData, data);
-            });
-        }
-
+        
         public IDisposable String(string eventName, Action<MetaData, string> getData) 
         {
             return this.Connection.On<string, string>(eventName, (meta, data) =>

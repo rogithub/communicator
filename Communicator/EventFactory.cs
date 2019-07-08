@@ -1,4 +1,3 @@
-using System.Xml;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -7,7 +6,6 @@ namespace Communicator
 {
     public interface IEventFactory
     {
-        Task<Guid> Xml(string eventName, XmlDocument data, MetaData meta);
         Task<Guid> Binary(string eventName, byte[] data, MetaData meta);
         Task<Guid> String(string eventName, string data, MetaData meta);
         Task<Guid> Json<T>(string eventName, T data, MetaData meta);
@@ -23,12 +21,7 @@ namespace Communicator
             this.Connection = connection;  
             this.JsonSerializer = new DefaultJsonSerializer();          
         }
-   
-        public Task<Guid> Xml(string eventName, XmlDocument data, MetaData meta)
-        {
-            return Connection.InvokeAsync<Guid>(EventNames.SendXml, eventName, JsonSerializer.Serialize(meta), data);
-        }
-
+           
         public Task<Guid> Json<T>(string eventName, T data, MetaData meta)
         {
             return Serialized(eventName, data, meta, JsonSerializer);

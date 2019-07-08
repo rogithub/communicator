@@ -1,7 +1,6 @@
 ﻿using System;
 using Communicator;
 using System.IO;
-using System.Xml;
 
 namespace Chat
 {
@@ -57,15 +56,7 @@ namespace Chat
 				string user = md.Get("user");
 				string fileName = md.Get("fileName");				
 				$"{user}: {fileName} length {data.Length}".Print();
-			});
-
-			source.Handle.Xml("Xml", (md, data) =>
-			{
-				Connections.AddUser(md);
-				string user = md.Get("user");
-				string content = md.Get("content");
-				$"{user}: Xml {Environment.NewLine} {content} {Environment.NewLine}".Print();
-			});
+			});			
 
 			source.Handle.Json<Person>("Person", (md, data) =>
 			{
@@ -102,18 +93,7 @@ namespace Chat
 							mtdt.SetFileInfo(path);
 							source.Send.Binary("File", bytes, mtdt);
 						}
-						break;
-					case "xml":
-						path = "Enter path: ".Prompt();						
-						if (File.Exists(path))
-						{
-							XmlDocument doc = new XmlDocument();
-							string contents = File.ReadAllText(path);
-							doc.LoadXml(contents);							
-							mtdt.SetXmlData(doc);
-							source.Send.Xml("Xml", doc, mtdt);
-						}
-						break;
+						break;					
 					case "to":
 						string user = "Send private message to: ".Prompt();
 						to = Connections.FindId(user);
