@@ -10,29 +10,29 @@ namespace Chat
     {
         public static void SetId(this MetaData md, string id)
 		{
-			md.SetValueString("id", id);
+			md.Set("id", id);
 		}
 
 		public static void SetUser(this MetaData md, string userName)
 		{
-			md.SetValueString("user", userName);
+			md.Set("user", userName);
 		}
 
 		public static void SetTo(this MetaData md, string to)
 		{
-			md.SetValueString("to", to);
+			md.Set("to", to);
 		}
 
 		public static void SetFileInfo(this MetaData md, string path)
 		{
 			FileInfo info = new FileInfo(path);
-			md.SetValueString("fileName", info.Name);
-			md.SetValueString("ext", info.Extension);
+			md.Set("fileName", info.Name);
+			md.Set("ext", info.Extension);
 		}
 
 		public static void SetXmlData(this MetaData md, XmlDocument doc)
 		{
-			md.SetValueString("content", doc.OuterXml);
+			md.Set("content", doc.OuterXml);
 		}
 
     } 

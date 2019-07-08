@@ -13,8 +13,8 @@ namespace Chat
 
 		public void AddUser(MetaData md)
 		{
-			string user = md.GetValueString("user");
-			string id = md.GetValueString("id");
+			string user = md.Get("user");
+			string id = md.Get("id");
 			AddUser(user, id);
 		}
 		public void AddUser(string user, string id)

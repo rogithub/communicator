@@ -16,7 +16,7 @@ namespace Communicator
 			this.Values = new List<Value>();
 		}
 
-		public string GetValueString(string dataCode, string defaultVal)
+		public string Get(string dataCode, string defaultVal)
 		{
 			var found = (from i in Values where !string.IsNullOrEmpty(i.DataCode) && i.DataCode.Equals(dataCode) select i).FirstOrDefault();
 			if (found != null && !string.IsNullOrEmpty(found.Data))
@@ -27,12 +27,12 @@ namespace Communicator
 			return defaultVal;
 		}
 
-		public string GetValueString(string dataCode)
+		public string Get(string dataCode)
 		{
-			return GetValueString(dataCode, string.Empty);	    
+			return Get(dataCode, string.Empty);	    
 		}
 
-		public void SetValueString(string dataCode, string data)
+		public void Set(string dataCode, string data)
 		{	    
 			var found = (from i in Values where !string.IsNullOrEmpty(i.DataCode) && i.DataCode.Equals(dataCode) select i).FirstOrDefault();
 			if (found == null)

@@ -40,37 +40,37 @@ namespace Chat
 			source.Handle.String("Chat", (md, data) =>
 			{
 				Connections.AddUser(md);
-				string user = md.GetValueString("user");
+				string user = md.Get("user");
 				$"{user}: {data}".Print();
 			});
 
 			source.Handle.String("ChatTo", (md, data) =>
 			{
 				Connections.AddUser(md);
-				string user = md.GetValueString("user");
+				string user = md.Get("user");
 				$"{user}: {data}".Print();
 			});
 
 			source.Handle.Binary("File", (md, data) =>
 			{
 				Connections.AddUser(md);
-				string user = md.GetValueString("user");
-				string fileName = md.GetValueString("fileName");				
+				string user = md.Get("user");
+				string fileName = md.Get("fileName");				
 				$"{user}: {fileName} length {data.Length}".Print();
 			});
 
 			source.Handle.Xml("Xml", (md, data) =>
 			{
 				Connections.AddUser(md);
-				string user = md.GetValueString("user");
-				string content = md.GetValueString("content");
+				string user = md.Get("user");
+				string content = md.Get("content");
 				$"{user}: Xml {Environment.NewLine} {content} {Environment.NewLine}".Print();
 			});
 
 			source.Handle.Json<Person>("Person", (md, data) =>
 			{
 				Connections.AddUser(md);
-				string user = md.GetValueString("user");				
+				string user = md.Get("user");				
 				$"{user}: Person {{ Name = {data.Name}, Age = {data.Age} }}".Print();
 			});
 
