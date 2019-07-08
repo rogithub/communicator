@@ -1,13 +1,15 @@
-using System;
+using System.IO;
 using Communicator;
 using System.Xml;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace  Chat
 {
     public class SerializationXml : IDataSerializer
     {
 
-        private Stream ToStream(this string s)
+        private Stream ToStream(string s)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
@@ -17,7 +19,7 @@ namespace  Chat
             return stream;
         }
 
-        public T Deserialize<T>(this string xml)
+        public T Deserialize<T>(string xml)
         {
             T obj = default(T);
             XmlSerializer serializer = new XmlSerializer(typeof(T));
