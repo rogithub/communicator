@@ -10,7 +10,7 @@ namespace Chat
     {
         private Dictionary<string, string> Users = new Dictionary<string, string>();
 
-		public void AddUser(IEnumerable<Value> md)
+		public void AddUser(IEnumerable<MetaData> md)
 		{
 			string user = md.Get("user");
 			string id = md.Get("id");
