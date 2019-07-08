@@ -92,7 +92,7 @@ namespace Chat
 						Console.Clear();
 						break;
 					case "quit":
-						source.Raise.String("Chat", "Disconnected", mtdt);
+						source.Send.String("Chat", "Disconnected", mtdt);
 						return;
 					case "file":
 						path = "Enter path: ".Prompt();
@@ -100,7 +100,7 @@ namespace Chat
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							mtdt.SetFileInfo(path);
-							source.Raise.Binary("File", bytes, mtdt);
+							source.Send.Binary("File", bytes, mtdt);
 						}
 						break;
 					case "xml":
@@ -111,7 +111,7 @@ namespace Chat
 							string contents = File.ReadAllText(path);
 							doc.LoadXml(contents);							
 							mtdt.SetXmlData(doc);
-							source.Raise.Xml("Xml", doc, mtdt);
+							source.Send.Xml("Xml", doc, mtdt);
 						}
 						break;
 					case "to":
@@ -120,7 +120,7 @@ namespace Chat
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = $"Private message for {user}: ".Prompt();
-							source.Raise.StringTo("ChatTo", to, message, mtdt);
+							source.Send.StringTo("ChatTo", to, message, mtdt);
 						}else
 						{
 							Console.WriteLine($"User not found: {user}");
@@ -132,10 +132,10 @@ namespace Chat
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
 						Person p = new Person() { Name = name, Age = age };
-						source.Raise.SendJson("Person", p, mtdt);
+						source.Send.Json("Person", p, mtdt);
 					break;
 					default:
-						source.Raise.String("Chat", message, mtdt);
+						source.Send.String("Chat", message, mtdt);
 						break;
 				}				
 			} 
