@@ -29,7 +29,7 @@ namespace Communicator
 		public string Value { get; set; }
     }    
     
-    public static class ValueHelpers
+    public static class MetaDataHelpers
     {	
 		public static bool Exists(this IEnumerable<MetaData> list, string key)
 		{			
@@ -49,7 +49,7 @@ namespace Communicator
 
 		public static void Set(this List<MetaData> list, string key, string value)
 		{		
-			if (Exists(list, key)) list.RemoveAll(i => i.Key.Equals(key));
+			list.RemoveAll(i => i.Key.Equals(key));
 			var newItem = new MetaData(key, value);
 			list.Add(newItem);
 		}
