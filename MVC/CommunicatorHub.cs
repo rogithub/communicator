@@ -24,20 +24,24 @@ namespace MVC
 			await Clients.Others.SendAsync("Communicator.OnDisconnected", Context.ConnectionId);
 		}		
 
-		public async Task<Guid> SendBinary(string eventName, string metaData, byte[] data)
+		public async Task<Guid> SendBinaryTo(string[] ids, string eventName, string metaData, byte[] data)
 		{
-			await Clients.Others.SendAsync(eventName, metaData, data);
+			Task task = (ids == null || ids.Length == 0) ?
+			Clients.Others.SendAsync(eventName, metaData, data):
+			Clients.Clients(ids).SendAsync(eventName, metaData, data);
+			await task;
+			
 			return Guid.NewGuid();
 		}
-
-		public async Task<Guid> SendString(string eventName, string metaData, string data)
-		{
-			await Clients.Others.SendAsync(eventName, metaData, data);
-			return Guid.NewGuid();
-		}
-		public async Task<Guid> SendStringTo(string connectionId, string eventName, string metaData, string data)
-		{
-			await Clients.Client(connectionId).SendAsync(eventName, metaData, data);
+		
+		
+		public async Task<Guid> SendStringTo(string[] ids, string eventName, string metaData, string data)
+		{			
+			Task task = (ids == null || ids.Length == 0) ?
+			Clients.Others.SendAsync(eventName, metaData, data):
+			Clients.Clients(ids).SendAsync(eventName, metaData, data);			
+			
+			await task;
 			return Guid.NewGuid();
 		}
 	}

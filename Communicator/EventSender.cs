@@ -35,25 +35,24 @@ namespace Communicator
         {
             return Serialized(eventName, message, Array.Empty<string>());
         }
+        
+        public Task<Guid> String<M>(string eventName, StringMessage<M> message, IEnumerable<string> to) where M : new()
+        {            
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), message.Data);
+        }
+        public Task<Guid> String<M>(string eventName, StringMessage<M> message)  where M : new()
+        {            
+            return String(eventName, message, Array.Empty<string>());
+        }
+        
 
         public Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message, IEnumerable<string> to) where M : new()
         {            
             return Connection.InvokeAsync<Guid>(EventNames.SendBinaryTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), message.Data);
-        }            
-
-        public Task<Guid> String<M>(string eventName, StringMessage<M> message, IEnumerable<string> to) where M : new()
-        {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), message.Data);
         }        
-
         public Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message)  where M : new()
         {            
-            return Binary(eventName, message);
-        }            
-
-        public Task<Guid> String<M>(string eventName, StringMessage<M> message)  where M : new()
-        {            
-            return String(eventName, message, Array.Empty<string>());
+            return Binary(eventName, message, Array.Empty<string>());
         }
     }
 }
