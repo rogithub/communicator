@@ -13,12 +13,13 @@ namespace Communicator.Obserables
             
         }            
         public override IDisposable Subscribe(IObserver<IMessage<byte[], T>> observer)
-        {            
+        {        
+            RegisterOnCompleted(observer);
+                
             return this.Connection.On<string, byte[]>(EventName, (meta, data) =>
             {
                 try 
-                {
-                    RegisterOnCompleted(observer);
+                {                    
                     T metaData = DefaultSerializer.Deserialize<T>(meta);
 
                     IMessage<byte[], T> message = new BinaryMessage<T>(data, metaData);

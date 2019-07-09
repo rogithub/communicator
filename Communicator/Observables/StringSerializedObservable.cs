@@ -14,12 +14,13 @@ namespace Communicator.Obserables
         }            
         
         public override IDisposable Subscribe(IObserver<IMessage<D, M>> observer)
-        {            
+        {        
+            RegisterOnCompleted(observer);
+                
             return this.Connection.On<string, string>(EventName, (meta, data) =>
             {
                 try 
-                {
-                    RegisterOnCompleted(observer);
+                {                    
                     M metaData = DefaultSerializer.Deserialize<M>(meta);
                     D deserilized = DefaultSerializer.Deserialize<D>(data);
 
