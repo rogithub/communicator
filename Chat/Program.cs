@@ -2,6 +2,8 @@
 using Communicator;
 using System.IO;
 using System.Collections.Generic;
+using Communicator.Core;
+using Communicator.Rx;
 
 namespace Chat
 {
@@ -21,7 +23,7 @@ namespace Chat
 			
 
 			string url = "http://localhost:5000/communicator";
-			IEventSource<List<MetaData>> source = EventSourceFactory.Get<List<MetaData>>(url, new JsonSerializer());
+			IEventSource source = EventSourceFactory.Get(url, new JsonSerializer());
 			
 			List<MetaData> mtdt = new List<MetaData>();
 			source.Connect().GetAwaiter().GetResult();
@@ -31,39 +33,39 @@ namespace Chat
 			Connections.AddUser(userName, source.ConnectionId);
 			Console.WriteLine($"Welcome: {userName}!");
 
-			source.Handle.OnDisconnected( id =>
+			
+			var onConnected = source.Observables.GetOnConnected(); 
+			onConnected.Subscribe(id => Connections.Remove(id));
+			
+ 			var onChat = source.Observables.GetString<List<MetaData>>("Chat");
+			onChat.Subscribe((msg) =>
 			{
-				Connections.Remove(id);
-			});
-
-			source.Handle.String("Chat", (md, data) =>
-			{
+				var md = msg.MetaData;
 				Connections.AddUser(md);
 				string user = md.Get("user");
-				$"{user}: {data}".Print();
+				$"{user}: {msg.Data}".Print();
 			});
 
-			source.Handle.String("ChatTo", (md, data) =>
+			var onFile = source.Observables.GetBinary<List<MetaData>>("File");
+			onFile.Subscribe((msg) =>
 			{
-				Connections.AddUser(md);
-				string user = md.Get("user");
-				$"{user}: {data}".Print();
-			});
-
-			source.Handle.Binary("File", (md, data) =>
-			{
+				var md = msg.MetaData;
 				Connections.AddUser(md);
 				string user = md.Get("user");
 				string fileName = md.Get("fileName");				
-				$"{user}: {fileName} length {data.Length}".Print();
-			});			
-
-			source.Handle.Json<Person>("Person", (md, data) =>
-			{
-				Connections.AddUser(md);
-				string user = md.Get("user");				
-				$"{user}: Person {{ Name = {data.Name}, Age = {data.Age} }}".Print();
+				$"{user}: {fileName} length {msg.Data.Length}".Print();
 			});
+
+			var onPerson = source.Observables.GetSerialized<Person, List<MetaData>>("Person");
+			onPerson.Subscribe((msg) =>
+			{
+				var md = msg.MetaData;
+				Connections.AddUser(md);
+
+				string user = md.Get("user");				
+				$"{user}: Person {{ Name = {msg.Data.Name}, Age = {msg.Data.Age} }}".Print();
+			});
+			
 
 			string message = "Connected";
 			string path = string.Empty;
@@ -83,7 +85,7 @@ namespace Chat
 						Console.Clear();
 						break;
 					case "quit":
-						source.Send.String("Chat", "Disconnected", mtdt);
+						source.Send.String("Chat", new StringMessage<List<MetaData>>("Disconnected", mtdt));
 						return;
 					case "file":
 						path = "Enter path: ".Prompt();
@@ -91,7 +93,7 @@ namespace Chat
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							mtdt.SetFileInfo(path);
-							source.Send.Binary("File", bytes, mtdt);
+							source.Send.Binary("File", new BinaryMessage<List<MetaData>>(bytes, mtdt));							
 						}
 						break;					
 					case "to":
@@ -100,7 +102,7 @@ namespace Chat
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = $"Private message for {user}: ".Prompt();
-							source.Send.StringTo("ChatTo", to, message, mtdt);
+							source.Send.String("Chat", new StringMessage<List<MetaData>>(message, mtdt), new string[] { to });
 						}else
 						{
 							Console.WriteLine($"User not found: {user}");
@@ -111,11 +113,11 @@ namespace Chat
 						string ageStr = "Person Age: ".Prompt();
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
-						Person p = new Person() { Name = name, Age = age };
-						source.Send.Json("Person", p, mtdt);
+						Person p = new Person() { Name = name, Age = age };						
+						source.Send.Serialized("Person", new StringSerializedMessage<Person, List<MetaData>>(p, mtdt));
 					break;
-					default:
-						source.Send.String("Chat", message, mtdt);
+					default:						
+						source.Send.String("Chat", new StringMessage<List<MetaData>>(message, mtdt));
 						break;
 				}				
 			} 

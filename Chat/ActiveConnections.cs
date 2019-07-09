@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Communicator;
+using Communicator.Core;
 
 namespace Chat
 {

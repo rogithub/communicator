@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using Communicator;
+using Communicator.Core;
 
 namespace Chat
 {

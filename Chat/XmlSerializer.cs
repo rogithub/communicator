@@ -3,6 +3,7 @@ using Communicator;
 using System.Xml;
 using System.Text;
 using System.Xml.Serialization;
+using Communicator.Core;
 
 namespace  Chat
 {

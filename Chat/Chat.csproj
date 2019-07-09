@@ -2,6 +2,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Communicator\Communicator.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="4.1.5" />
+  </ItemGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
