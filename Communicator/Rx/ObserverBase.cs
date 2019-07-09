@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Rx
 {
-    internal abstract class EventSenderBase<D, M> : IObserver<IMessage<D, M>>
+    internal abstract class ObserverBase<D, M> : IObserver<IMessage<D, M>>
     {
         protected string EventName { get; set; }
         protected IEnumerable<string> To { get; set; }
@@ -15,7 +15,7 @@ namespace Communicator.Rx
         protected Action OnCompletedAction { get; set; }
         protected Action<Exception> OnErrorAction { get; set; }
         
-        public EventSenderBase(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
+        public ObserverBase(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
         {
             this.Connection = connection;
             this.DefaultSerializer = serializer;

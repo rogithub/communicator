@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Rx
 {
-    internal class BinaryEventSender<T> : EventSenderBase<T, byte[]> 
+    internal class BinaryObserver<T> : ObserverBase<T, byte[]> 
     {
        
-        public BinaryEventSender(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
+        public BinaryObserver(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
         : base(connection, serializer, eventName, to, onCompleted, onError)
         {
             

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Rx
 {
-    internal class StringSerializedEventSender<D, M> : EventSenderBase<D, M> where D: new() where M : new()
+    internal class StringSerializedObserver<D, M> : ObserverBase<D, M> where D: new() where M : new()
     {                
-        public StringSerializedEventSender(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
+        public StringSerializedObserver(HubConnection connection, IStringSerializer serializer, string eventName, IEnumerable<string> to, Action onCompleted, Action<Exception> onError)
         : base(connection, serializer, eventName, to, onCompleted, onError)
         {
             
