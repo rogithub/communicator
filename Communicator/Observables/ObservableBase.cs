@@ -2,7 +2,7 @@ using System;
 using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Communicator.Rx
+namespace Communicator.Obserables
 {
     internal abstract class ObservableBase<D, M> : IObservable<IMessage<D, M>>
     {

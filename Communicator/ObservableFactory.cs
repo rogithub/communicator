@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
-using Communicator.Rx;
+using Communicator.Obserables;
 
 namespace Communicator
 {

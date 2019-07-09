@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace Communicator.Rx
+namespace Communicator.Core
 {
     public class BinaryMessage<T> : MessageBase<byte[], T> where T : new()
     {                

@@ -1,18 +1,18 @@
 using System;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Communicator.Rx
+namespace Communicator.Obserables
 {
-    internal class ConnectedObservable : IObservable<string>
+    internal class DisconnectedObservable : IObservable<string>
     {                
         protected HubConnection Connection { get; set; }
-        public ConnectedObservable(HubConnection connection)        
+        public DisconnectedObservable(HubConnection connection)        
         {
             this.Connection = connection;
         }            
         public IDisposable Subscribe(IObserver<string> observer)
         {            
-            return this.Connection.On<string>(EventNames.OnConnected, connectionId => {
+            return this.Connection.On<string>(EventNames.OnDisconnected, connectionId => {
                 observer.OnNext(connectionId);
             });
         } 

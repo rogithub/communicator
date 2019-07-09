@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Communicator.Rx
+namespace Communicator.Core
 {
     public class StringMessage<T> : MessageBase<string, T> where T: new()
     {        

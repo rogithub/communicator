@@ -3,7 +3,7 @@ using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 
-namespace Communicator.Rx
+namespace Communicator.Obserables
 {
     internal class StringSerializedObservable<D, M> : ObservableBase<D, M> where D: new() where M : new()
     {                

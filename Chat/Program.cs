@@ -3,7 +3,6 @@ using Communicator;
 using System.IO;
 using System.Collections.Generic;
 using Communicator.Core;
-using Communicator.Rx;
 
 namespace Chat
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Communicator.Rx
+namespace Communicator.Core
 {
     public interface IMessage<D, M>
     {        

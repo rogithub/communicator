@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace Communicator.Rx
+namespace Communicator.Core
 {
     public class StringSerializedMessage<D, M> : MessageBase<D, M> where D: new() where M: new()
     {        

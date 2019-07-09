@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
-using Communicator.Rx;
 
 namespace Communicator
 {
