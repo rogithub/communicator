@@ -40,7 +40,7 @@ namespace Communicator
         
         public Task<Guid> String(string eventName, string data, TMetaData meta) 
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendString, eventName, DefaultSerializer.Serialize(meta), data);
+            return Connection.InvokeAsync<Guid>(EventNames.SendString, eventName, DefaultSerializer.Serialize(meta), data);            
         }
 
         // TODO: 
