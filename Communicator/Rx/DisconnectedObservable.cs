@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Rx
 {
-    public class DisconnectedObservable : IObservable<string>
+    internal class DisconnectedObservable : IObservable<string>
     {                
         protected HubConnection Connection { get; set; }
         public DisconnectedObservable(HubConnection connection)        

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Communicator.Rx
 {
-    internal interface IMessage<D, M>
+    public interface IMessage<D, M>
     {        
         D Data { get; set; }
         M MetaData { get; set; }                

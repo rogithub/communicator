@@ -4,28 +4,28 @@ using Communicator.Core;
 
 namespace Communicator
 {
-    public interface IEventSource<T> where T : new()
+    public interface IEventSource 
     {
-        IHandlerFactory<T> Handle { get; }
-        IEventFactory<T> Send { get; }
+        IObservableFactory Observables { get; }
+        IEventSender Send { get; }
         string ConnectionId { get; }
         Task<string> Connect();
     }
 
     public static class EventSourceFactory
     {       
-        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer dataSerializer) where T : new()
+        public static IEventSource Get(string urlServer, IDataSerializer dataSerializer)
         {
-            return new EventSource<T>(urlServer, dataSerializer);
+            return new EventSource(urlServer, dataSerializer);
         }
     }
 
 
-    internal class EventSource<T> : IEventSource<T> where T : new()
+    internal class EventSource : IEventSource
     {
         private HubConnection Connection { get; set; }
-        public IHandlerFactory<T> Handle {get; private set;}
-        public IEventFactory<T> Send {get; private set;}
+        public IObservableFactory Observables {get; private set;}
+        public IEventSender Send {get; private set;}
         public IDataSerializer DataSerializer {get; private set;}
 
         public string ConnectionId {get; private set;}
@@ -33,8 +33,8 @@ namespace Communicator
         public EventSource(string urlServer, IDataSerializer serializer)
         {
             this.Connection = ConnectionBuilder.Build(urlServer);
-            this.Handle = new HandlerFactory<T>(this.Connection, serializer);
-            this.Send = new EventFactory<T>(this.Connection, serializer);
+            this.Observables = new ObservableFactory(this.Connection, serializer);
+            this.Send = new EventSender(this.Connection, serializer);
         }
 
         public async Task<string> Connect()
