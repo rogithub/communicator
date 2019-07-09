@@ -4,7 +4,7 @@ using Communicator.Core;
 
 namespace Communicator
 {
-    public interface IEventSource<T>
+    public interface IEventSource<T> where T : new()
     {
         IHandlerFactory<T> Handle { get; }
         IEventFactory<T> Send { get; }
@@ -14,14 +14,14 @@ namespace Communicator
 
     public static class EventSourceFactory
     {       
-        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer dataSerializer)
+        public static IEventSource<T> Get<T>(string urlServer, IDataSerializer dataSerializer) where T : new()
         {
             return new EventSource<T>(urlServer, dataSerializer);
         }
     }
 
 
-    internal class EventSource<T> : IEventSource<T>
+    internal class EventSource<T> : IEventSource<T> where T : new()
     {
         private HubConnection Connection { get; set; }
         public IHandlerFactory<T> Handle {get; private set;}
