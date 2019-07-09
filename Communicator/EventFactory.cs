@@ -42,6 +42,11 @@ namespace Communicator
             return Connection.InvokeAsync<Guid>(EventNames.SendString, eventName, DefaultSerializer.Serialize(meta), data);
         }
 
+        // TODO: 
+        // * Remove EventNames.SendString
+        // * Always use EventNames.SendStringTo sending an array of connection Ids, emtpy means to all.
+        // * Do the same for binary
+        // * Implement Rx version of it using IMessage.cs file
         public Task<Guid> StringTo(string eventName, string connectionId, string data, TMetaData meta) 
         {            
             return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, connectionId, eventName, DefaultSerializer.Serialize(meta), data);
