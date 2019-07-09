@@ -33,8 +33,8 @@ namespace Chat
 			Console.WriteLine($"Welcome: {userName}!");
 
 			
-			var onConnected = source.Observables.GetOnConnected(); 
-			onConnected.Subscribe(id => Connections.Remove(id));
+			var onDisconnected = source.Observables.GetOnDisconnected(); 
+			onDisconnected.Subscribe(id => Connections.Remove(id));
 			
  			var onChat = source.Observables.GetString<List<MetaData>>("Chat");
 			onChat.Subscribe((msg) =>
