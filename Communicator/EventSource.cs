@@ -38,13 +38,7 @@ namespace Communicator
         }
 
         public async Task<string> Connect()
-        {            
-            //Connection.Closed += async (error) =>
-            //{
-            //    await Task.Delay(new Random().Next(0,5) * 1000);
-            //    await Connection.StartAsync();
-            //};
-
+        {        
             await Connection.StartAsync();
             ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);
             

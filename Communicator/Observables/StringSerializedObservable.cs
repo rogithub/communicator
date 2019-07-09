@@ -19,6 +19,7 @@ namespace Communicator.Obserables
             {
                 try 
                 {
+                    RegisterOnCompleted(observer);
                     M metaData = DefaultSerializer.Deserialize<M>(meta);
                     D deserilized = DefaultSerializer.Deserialize<D>(data);
 

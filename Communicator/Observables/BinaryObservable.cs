@@ -18,6 +18,7 @@ namespace Communicator.Obserables
             {
                 try 
                 {
+                    RegisterOnCompleted(observer);
                     T metaData = DefaultSerializer.Deserialize<T>(meta);
 
                     IMessage<byte[], T> message = new BinaryMessage<T>(data, metaData);

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -8,7 +9,16 @@ namespace Communicator.Obserables
     {
         protected string EventName { get; set; }
         protected HubConnection Connection { get; set; }
-        protected IStringDeserializer DefaultSerializer { get; set; }        
+        protected IStringDeserializer DefaultSerializer { get; set; }  
+
+        protected void RegisterOnCompleted(IObserver<IMessage<D,M>> observer)
+        {
+            Connection.Closed += (error) =>
+            {
+                observer.OnCompleted();
+                return Task.CompletedTask;
+            };
+        }
         
         public ObservableBase(HubConnection connection, IStringDeserializer deserializer, string eventName)
         {
@@ -18,5 +28,4 @@ namespace Communicator.Obserables
         }
         public abstract IDisposable Subscribe(IObserver<IMessage<D, M>> observer);
     }
-
 }

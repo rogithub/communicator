@@ -11,9 +11,10 @@ namespace Communicator.Obserables
             this.Connection = connection;
         }            
         public IDisposable Subscribe(IObserver<string> observer)
-        {            
+        {                        
             return this.Connection.On<string>(EventNames.OnConnected, connectionId => {
                 observer.OnNext(connectionId);
+                observer.OnCompleted();
             });
         } 
     }

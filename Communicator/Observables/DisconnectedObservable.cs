@@ -14,6 +14,7 @@ namespace Communicator.Obserables
         {            
             return this.Connection.On<string>(EventNames.OnDisconnected, connectionId => {
                 observer.OnNext(connectionId);
+                observer.OnCompleted();
             });
         } 
     }
