@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System;
 
-namespace Communicator
+namespace Communicator.Core
 {
     [DataContract]
     public struct MetaData

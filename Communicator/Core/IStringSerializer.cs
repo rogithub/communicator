@@ -1,4 +1,4 @@
-namespace Communicator
+namespace Communicator.Core
 {
     public interface IStringSerializer
 	{
