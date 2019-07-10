@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
@@ -15,6 +14,10 @@ namespace Communicator
         Task<Guid> Binary(EventInfo info, byte[] message);
         Task<Guid> Serialized<T>(EventInfo info, T message) where T : new();
         Task<Guid> String(EventInfo info, string message);
+
+        Task<Guid> Binary(EventInfo info, BinaryMessage message);
+        Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new();
+        Task<Guid> String(EventInfo info, StringMessage message);
     }
 
     
@@ -59,6 +62,21 @@ namespace Communicator
         public Task<Guid> String(EventInfo info, string data)
         {
             var message = new NoMetaDataStringMessage(data);
+            return String(info, message);
+        }
+
+        public Task<Guid> Binary(EventInfo info, BinaryMessage message)
+        {
+            return Binary(info, message);
+        }
+
+        public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new()
+        {
+            return Serialized<T>(info, message);
+        }
+
+        public Task<Guid> String(EventInfo info, StringMessage message)
+        {
             return String(info, message);
         }
     }

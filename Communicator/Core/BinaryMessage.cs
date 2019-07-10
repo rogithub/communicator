@@ -11,4 +11,12 @@ namespace Communicator.Core
         }        
     }
 
+    public class BinaryMessage : MessageBase<byte[], List<MetaData>>
+    {                
+        public BinaryMessage(byte[] data, List<MetaData> metaData): base (data, metaData)
+        {
+            
+        }        
+    }
+
 }

@@ -11,4 +11,12 @@ namespace Communicator.Core
         }        
     }
 
+    public class StringSerializedMessage<T> : MessageBase<T, List<MetaData>> where T: new()
+    {        
+        public StringSerializedMessage(T data, List<MetaData> metaData): base (data, metaData)
+        {
+            
+        }        
+    }
+
 }

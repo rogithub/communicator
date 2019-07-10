@@ -93,7 +93,7 @@ namespace Chat
 						Console.Clear();
 						break;
 					case "quit":
-						source.Send.String(new EventInfo("Chat"), new StringMessage<List<MetaData>>("Disconnected", mtdt));
+						source.Send.String(new EventInfo("Chat"), new StringMessage("Disconnected", mtdt));
 						return;
 					case "file":
 						path = "Enter path: ".Prompt();
@@ -101,7 +101,7 @@ namespace Chat
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							mtdt.SetFileInfo(path);
-							source.Send.Binary(new EventInfo("File"), new BinaryMessage<List<MetaData>>(bytes, mtdt));							
+							source.Send.Binary(new EventInfo("File"), new BinaryMessage(bytes, mtdt));							
 						}
 						break;					
 					case "to":
@@ -110,7 +110,7 @@ namespace Chat
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = $"Private message for {user}: ".Prompt();
-							source.Send.String(new EventInfo("Chat", to, null), new StringMessage<List<MetaData>>(message, mtdt));
+							source.Send.String(new EventInfo("Chat", to, null), new StringMessage(message, mtdt));
 						}else
 						{
 							Console.WriteLine($"User not found: {user}");
@@ -122,10 +122,10 @@ namespace Chat
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
 						Person p = new Person() { Name = name, Age = age };						
-						source.Send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person, List<MetaData>>(p, mtdt));
+						source.Send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, mtdt));
 					break;
 					default:						
-						source.Send.String(new EventInfo("Chat"), new StringMessage<List<MetaData>>(message, mtdt));
+						source.Send.String(new EventInfo("Chat"), new StringMessage(message, mtdt));
 						break;
 				}				
 			} 
