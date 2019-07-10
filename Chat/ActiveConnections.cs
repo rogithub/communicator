@@ -16,7 +16,7 @@ namespace Chat
 			string id = md.Get("id");
 			AddUser(user, id);
 		}
-		public void AddUser(string user, string id)
+		private void AddUser(string user, string id)
 		{	
 			if (!string.IsNullOrWhiteSpace(user) && !string.IsNullOrWhiteSpace(id))
 			{

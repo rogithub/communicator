@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 using Communicator.Core;
+using System;
 
 namespace Communicator
 {
@@ -9,7 +10,7 @@ namespace Communicator
         IObservableFactory Observables { get; }
         IEventSender Send { get; }
         string ConnectionId { get; }
-        Task<string> Connect();
+        Task<Guid> Connect<T>(T metaData) where T : new();
     }
 
     public static class EventSourceFactory
@@ -37,12 +38,13 @@ namespace Communicator
             this.Send = new EventSender(this.Connection, serializer);
         }
 
-        public async Task<string> Connect()
+        public async Task<Guid> Connect<T>(T metaData) where T: new()
         {        
             await Connection.StartAsync();
-            ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);
-            
-            return ConnectionId;
+            ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);            
+            Guid taskId = await Send.String(EventNames.OnConnected, new StringMessage<T>(ConnectionId, metaData));
+
+            return taskId;
         }
     }
 }

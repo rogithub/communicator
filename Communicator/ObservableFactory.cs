@@ -11,8 +11,7 @@ namespace Communicator
         IObservable<IMessage<byte[], T>> GetBinary<T>(string eventName) where T: new();
         IObservable<IMessage<string, T>> GetString<T>(string eventName) where T: new();
         IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName) where D: new() where M : new();
-
-        IObservable<string> GetOnConnected();
+        IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new();
         IObservable<string> GetOnDisconnected();
     }
 
@@ -39,13 +38,14 @@ namespace Communicator
             return new StringSerializedObservable<D, M>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
-        public IObservable<string> GetOnConnected()
-        {
-            return new ConnectedObservable(this.Connection);
-        }
         public IObservable<string> GetOnDisconnected()
         {
             return new DisconnectedObservable(this.Connection);
+        }
+
+        public IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new()
+        {
+            return new ConnectedObservable<T>(this.Connection, this.DefaultDeserializer);
         }
     }
 }

@@ -25,42 +25,51 @@ namespace Chat
 			IEventSource source = EventSourceFactory.Get(url, new JsonSerializer());
 			
 			List<MetaData> mtdt = new List<MetaData>();
-			source.Connect().GetAwaiter().GetResult();
+			mtdt.SetUser(userName);
+
+			source.Connect(mtdt).GetAwaiter().GetResult();
 			
 			mtdt.SetId(source.ConnectionId);
-			mtdt.SetUser(userName);
-			Connections.AddUser(userName, source.ConnectionId);
+			Connections.AddUser(mtdt);
 			Console.WriteLine($"Welcome: {userName}!");
 
+			var onDisconnected = source.Observables.GetOnDisconnected();
+			var onConnected = source.Observables.GetOnConnected<List<MetaData>>(); 			 
+			var onChat = source.Observables.GetString<List<MetaData>>("Chat");
+			var onFile = source.Observables.GetBinary<List<MetaData>>("File");
+			var onPerson = source.Observables.GetSerialized<Person, List<MetaData>>("Person");
+
+			onConnected.Subscribe(m => Connections.AddUser(m.MetaData));
+			onChat.Subscribe(m => Connections.AddUser(m.MetaData));
+			onFile.Subscribe(m => Connections.AddUser(m.MetaData));
+			onPerson.Subscribe(m => Connections.AddUser(m.MetaData));
+
+			onConnected.Subscribe(msg => {
+				string user = msg.MetaData.Get("user");
+				Console.WriteLine($" User {user} joined!");
+			});
 			
-			var onDisconnected = source.Observables.GetOnDisconnected(); 
+			
 			onDisconnected.Subscribe(id => Connections.Remove(id));
-			
- 			var onChat = source.Observables.GetString<List<MetaData>>("Chat");
+						
 			onChat.Subscribe((msg) =>
 			{
-				var md = msg.MetaData;
-				Connections.AddUser(md);
+				var md = msg.MetaData;				
 				string user = md.Get("user");
 				$"{user}: {msg.Data}".Print();
 			});
 
-			var onFile = source.Observables.GetBinary<List<MetaData>>("File");
 			onFile.Subscribe((msg) =>
 			{
 				var md = msg.MetaData;
-				Connections.AddUser(md);
 				string user = md.Get("user");
 				string fileName = md.Get("fileName");				
 				$"{user}: {fileName} length {msg.Data.Length}".Print();
 			});
 
-			var onPerson = source.Observables.GetSerialized<Person, List<MetaData>>("Person");
 			onPerson.Subscribe((msg) =>
 			{
 				var md = msg.MetaData;
-				Connections.AddUser(md);
-
 				string user = md.Get("user");				
 				$"{user}: Person {{ Name = {msg.Data.Name}, Age = {msg.Data.Age} }}".Print();
 			});

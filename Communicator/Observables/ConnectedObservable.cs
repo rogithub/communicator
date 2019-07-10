@@ -1,22 +1,36 @@
 using System;
+using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
-    internal class ConnectedObservable : IObservable<string>
+    internal class ConnectedObservable<T> : ObservableBase<string, T> where T: new()
     {                
-        protected HubConnection Connection { get; set; }
-        public ConnectedObservable(HubConnection connection)        
+        public ConnectedObservable(HubConnection connection, IStringDeserializer serializer)
+        : base(connection, serializer, EventNames.OnConnected)
         {
-            this.Connection = connection;
-        }            
-        public IDisposable Subscribe(IObserver<string> observer)
-        {                        
-            return this.Connection.On<string>(EventNames.OnConnected, connectionId => {
-                observer.OnNext(connectionId);
-                observer.OnCompleted();
+            
+        }             
+        
+        public override IDisposable Subscribe(IObserver<IMessage<string, T>> observer)
+        {               
+            return this.Connection.On<string, string>(EventNames.OnConnected, (meta, data) =>
+            {
+                try 
+                {                    
+                    T metaData = DefaultSerializer.Deserialize<T>(meta);
+                    
+                    IMessage<string, T> message = new StringMessage<T>(data, metaData);
+                    
+                    observer.OnNext(message); 
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }
             });
-        } 
+        }
     }
 
 }
