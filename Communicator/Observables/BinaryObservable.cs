@@ -33,33 +33,5 @@ namespace Communicator.Obserables
                 }
             });
         }      
-    }
-
-    internal class BinaryObservable : ObservableBase<byte[], List<MetaData>>
-    {
-       
-        public BinaryObservable(HubConnection connection, string eventName)
-        : base(connection, null, eventName)
-        {
-            
-        }            
-        public override IDisposable Subscribe(IObserver<IMessage<byte[], List<MetaData>>> observer)
-        {        
-            RegisterOnCompleted(observer);
-                
-            return this.Connection.On<List<MetaData>, byte[]>(EventName, (metaData, data) =>
-            {
-                try 
-                {                                        
-                    IMessage<byte[], List<MetaData>> message = new BinaryMessage<List<MetaData>>(data, metaData);
-                    
-                    observer.OnNext(message);
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
-        }      
-    }
+    }    
 }

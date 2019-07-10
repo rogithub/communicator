@@ -33,32 +33,4 @@ namespace Communicator.Obserables
             });
         } 
     }
-
-    internal class StringObservable : ObservableBase<string, List<MetaData>>
-    {                
-        public StringObservable(HubConnection connection, string eventName)
-        : base(connection, null, eventName)
-        {
-            
-        }            
-        public override IDisposable Subscribe(IObserver<IMessage<string, List<MetaData>>> observer)
-        {        
-            RegisterOnCompleted(observer);
-                
-            return this.Connection.On<List<MetaData>, string>(EventName, (metaData, data) =>
-            {
-                try
-                {                    
-                    IMessage<string, List<MetaData>> message = new StringMessage<List<MetaData>>(data, metaData);
-                    
-                    observer.OnNext(message);
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
-        } 
-    }
-
 }

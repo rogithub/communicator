@@ -56,18 +56,18 @@ namespace Communicator
         }
 
         public IObservable<IMessage<byte[], List<MetaData>>> GetBinary(string eventName)
-        {
-            return new BinaryObservable(this.Connection, eventName);
+        {            
+            return new BinaryObservable<List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
         public IObservable<IMessage<string, List<MetaData>>> GetString(string eventName)
         {
-            return new StringObservable(this.Connection, eventName);
+            return new StringObservable<List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
         public IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName) where T : new()
         {
-            return new StringSerializedObservable<T>(this.Connection, this.DefaultDeserializer, eventName);
+            return new StringSerializedObservable<T, List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
         public IObservable<IMessage<string, List<MetaData>>> GetOnConnected()

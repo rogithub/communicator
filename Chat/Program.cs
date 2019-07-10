@@ -125,7 +125,7 @@ namespace Chat
 						source.Send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person, List<MetaData>>(p, mtdt));
 					break;
 					default:						
-						source.Send.String(new EventInfo("Person"), new StringMessage<List<MetaData>>(message, mtdt));
+						source.Send.String(new EventInfo("Chat"), new StringMessage<List<MetaData>>(message, mtdt));
 						break;
 				}				
 			} 
