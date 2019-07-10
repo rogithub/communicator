@@ -34,10 +34,10 @@ namespace Chat
 			Console.WriteLine($"Welcome: {userName}!");
 
 			var onDisconnected = source.Observables.GetOnDisconnected();
-			var onConnected = source.Observables.GetOnConnected<List<MetaData>>(); 			 
-			var onChat = source.Observables.GetString<List<MetaData>>("Chat");
-			var onFile = source.Observables.GetBinary<List<MetaData>>("File");
-			var onPerson = source.Observables.GetSerialized<Person, List<MetaData>>("Person");
+			var onConnected = source.Observables.GetOnConnected();
+			var onChat = source.Observables.GetString("Chat");
+			var onFile = source.Observables.GetBinary("File");
+			var onPerson = source.Observables.GetSerialized<Person>("Person");
 
 			onConnected.Subscribe(m => Connections.AddUser(m.MetaData));
 			onChat.Subscribe(m => Connections.AddUser(m.MetaData));
@@ -93,7 +93,7 @@ namespace Chat
 						Console.Clear();
 						break;
 					case "quit":
-						source.Send.String("Chat", new StringMessage<List<MetaData>>("Disconnected", mtdt));
+						source.Send.String(new EventInfo("Chat"), new StringMessage<List<MetaData>>("Disconnected", mtdt));
 						return;
 					case "file":
 						path = "Enter path: ".Prompt();
@@ -101,7 +101,7 @@ namespace Chat
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							mtdt.SetFileInfo(path);
-							source.Send.Binary("File", new BinaryMessage<List<MetaData>>(bytes, mtdt));							
+							source.Send.Binary(new EventInfo("File"), new BinaryMessage<List<MetaData>>(bytes, mtdt));							
 						}
 						break;					
 					case "to":
@@ -110,7 +110,7 @@ namespace Chat
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = $"Private message for {user}: ".Prompt();
-							source.Send.String("Chat", new StringMessage<List<MetaData>>(message, mtdt), new string[] { to });
+							source.Send.String(new EventInfo("Chat", to, null), new StringMessage<List<MetaData>>(message, mtdt));
 						}else
 						{
 							Console.WriteLine($"User not found: {user}");
@@ -122,10 +122,10 @@ namespace Chat
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
 						Person p = new Person() { Name = name, Age = age };						
-						source.Send.Serialized("Person", new StringSerializedMessage<Person, List<MetaData>>(p, mtdt));
+						source.Send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person, List<MetaData>>(p, mtdt));
 					break;
 					default:						
-						source.Send.String("Chat", new StringMessage<List<MetaData>>(message, mtdt));
+						source.Send.String(new EventInfo("Person"), new StringMessage<List<MetaData>>(message, mtdt));
 						break;
 				}				
 			} 

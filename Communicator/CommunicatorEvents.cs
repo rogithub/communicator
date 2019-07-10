@@ -7,5 +7,7 @@ namespace Communicator
         internal const string GetConnectionId = "GetConnectionId";        
         internal const string SendBinaryTo = "SendBinaryTo";
         internal const string SendStringTo = "SendStringTo";
+        internal const string SendBinaryToGeneric = "SendBinaryToGeneric";
+        internal const string SendStringToGeneric = "SendStringToGeneric";
     }
 }

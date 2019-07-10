@@ -15,6 +15,11 @@ namespace Communicator
 
     public static class EventSourceFactory
     {       
+        public static IEventSource GetGeneric(string urlServer, IDataSerializer dataSerializer)
+        {
+            return new EventSource(urlServer, dataSerializer);
+        }
+
         public static IEventSource Get(string urlServer, IDataSerializer dataSerializer)
         {
             return new EventSource(urlServer, dataSerializer);
@@ -42,7 +47,7 @@ namespace Communicator
         {        
             await Connection.StartAsync();
             ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);            
-            Guid taskId = await Send.String(EventNames.OnConnected, new StringMessage<T>(ConnectionId, metaData));
+            Guid taskId = await Send.String(new EventInfo(EventNames.OnConnected), new StringMessage<T>(ConnectionId, metaData));
 
             return taskId;
         }

@@ -1,6 +1,8 @@
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Communicator.Core;
 using Microsoft.AspNetCore.SignalR;
 
 namespace MVC
@@ -24,22 +26,43 @@ namespace MVC
 			await Clients.Others.SendAsync("Communicator.OnDisconnected", Context.ConnectionId);
 		}		
 
-		public async Task<Guid> SendBinaryTo(string[] ids, string eventName, string metaData, byte[] data)
+		public async Task<Guid> SendBinaryToGeneric(EventInfo info, string metaData, byte[] data)
 		{
-			Task task = (ids == null || ids.Length == 0) ?
-			Clients.Others.SendAsync(eventName, metaData, data):
-			Clients.Clients(ids).SendAsync(eventName, metaData, data);
+			Task task = (info.To == null || info.To.Length == 0) ?
+			Clients.Others.SendAsync(info.EventName, metaData, data):
+			Clients.Clients(info.To).SendAsync(info.EventName, metaData, data);
 			await task;
 			
 			return Guid.NewGuid();
 		}
 		
 		
-		public async Task<Guid> SendStringTo(string[] ids, string eventName, string metaData, string data)
+		public async Task<Guid> SendStringToGeneric(EventInfo info, string metaData, string data)
 		{			
-			Task task = (ids == null || ids.Length == 0) ?
-			Clients.Others.SendAsync(eventName, metaData, data):
-			Clients.Clients(ids).SendAsync(eventName, metaData, data);			
+			Task task = (info.To == null || info.To.Length == 0) ?
+			Clients.Others.SendAsync(info.EventName, metaData, data):
+			Clients.Clients(info.To).SendAsync(info.EventName, metaData, data);
+			
+			await task;
+			return Guid.NewGuid();
+		}
+
+		public async Task<Guid> SendBinaryTo(EventInfo info, List<MetaData> metaData, byte[] data)
+		{
+			Task task = (info.To == null || info.To.Length == 0) ?
+			Clients.Others.SendAsync(info.EventName, metaData, data):
+			Clients.Clients(info.To).SendAsync(info.EventName, metaData, data);
+			await task;
+			
+			return Guid.NewGuid();
+		}
+		
+		
+		public async Task<Guid> SendStringTo(EventInfo info, List<MetaData> metaData, string data)
+		{			
+			Task task = (info.To == null || info.To.Length == 0) ?
+			Clients.Others.SendAsync(info.EventName, metaData, data):
+			Clients.Clients(info.To).SendAsync(info.EventName, metaData, data);
 			
 			await task;
 			return Guid.NewGuid();

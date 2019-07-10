@@ -7,15 +7,22 @@ using Communicator.Core;
 namespace Communicator
 {
     public interface IEventSender
-    {
-        Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message) where M : new();
-        Task<Guid> Serialized<D, M>(string eventName, StringSerializedMessage<D, M> message) where D : new() where M : new();
-        Task<Guid> String<M>(string eventName, StringMessage<M> message) where M : new();
+    {        
+        Task<Guid> Binary<M>(EventInfo info, BinaryMessage<M> message) where M : new();
+        Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message) where D : new() where M : new();
+        Task<Guid> String<M>(EventInfo info, StringMessage<M> message) where M : new();
 
-        Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message, IEnumerable<string> to) where M : new();
-        Task<Guid> Serialized<D, M>(string eventName, StringSerializedMessage<D, M> message, IEnumerable<string> to) where D : new() where M : new();
-        Task<Guid> String<M>(string eventName, StringMessage<M> message, IEnumerable<string> to) where M : new();
+        Task<Guid> Binary(EventInfo info, BinaryMessage<List<MetaData>> message);
+        Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T, List<MetaData>> message) where T : new();
+        Task<Guid> String(EventInfo info, StringMessage<List<MetaData>> message);
+
+        Task<Guid> Binary(EventInfo info, byte[] message);
+        Task<Guid> Serialized<T>(EventInfo info, T message) where T : new();
+        Task<Guid> String(EventInfo info, string message);
     }
+
+    
+
     internal class EventSender : IEventSender
     {
         private HubConnection Connection { get; set; }
@@ -26,32 +33,52 @@ namespace Communicator
             this.DefaultSerializer = serializer;
         }                   
 
-        public Task<Guid> Serialized<D, M>(string eventName, StringSerializedMessage<D, M> message, IEnumerable<string> to) where D : new() where M : new()
+        public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message) where D : new() where M : new()
         {
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), DefaultSerializer.Serialize(message.Data));
-        }
-        public Task<Guid> Serialized<D, M>(string eventName, StringSerializedMessage<D, M> message)  where D : new() where M : new()
-        {
-            return Serialized(eventName, message, Array.Empty<string>());
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringToGeneric, info, DefaultSerializer.Serialize(message.MetaData), DefaultSerializer.Serialize(message.Data));
         }
         
-        public Task<Guid> String<M>(string eventName, StringMessage<M> message, IEnumerable<string> to) where M : new()
+        public Task<Guid> String<M>(EventInfo info, StringMessage<M> message) where M : new()
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), message.Data);
-        }
-        public Task<Guid> String<M>(string eventName, StringMessage<M> message)  where M : new()
-        {            
-            return String(eventName, message, Array.Empty<string>());
-        }
-        
-
-        public Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message, IEnumerable<string> to) where M : new()
-        {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendBinaryTo, to, eventName, DefaultSerializer.Serialize(message.MetaData), message.Data);
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringToGeneric, info, DefaultSerializer.Serialize(message.MetaData), message.Data);
         }        
-        public Task<Guid> Binary<M>(string eventName, BinaryMessage<M> message)  where M : new()
+
+        public Task<Guid> Binary<M>(EventInfo info, BinaryMessage<M> message) where M : new()
         {            
-            return Binary(eventName, message, Array.Empty<string>());
+            return Connection.InvokeAsync<Guid>(EventNames.SendBinaryToGeneric, info, DefaultSerializer.Serialize(message.MetaData), message.Data);
+        }
+
+        public Task<Guid> Binary(EventInfo info, BinaryMessage<List<MetaData>> message)
+        {
+            return Connection.InvokeAsync<Guid>(EventNames.SendBinaryTo, info, message.MetaData, message.Data);
+        }
+
+        public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T, List<MetaData>> message) where T : new()
+        {
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info, message.MetaData, DefaultSerializer.Serialize(message.Data));
+        }
+
+        public Task<Guid> String(EventInfo info, StringMessage<List<MetaData>> message)
+        {
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info, message.MetaData, message.Data);
+        }
+
+        public Task<Guid> Binary(EventInfo info, byte[] data)
+        {
+            var message = new NoMetaDataBinaryMessage(data);
+            return Binary(info, message);            
+        }
+
+        public Task<Guid> Serialized<T>(EventInfo info, T data) where T : new()
+        {
+            var message = new NoMetaDataSerializedMessage<T>(data);
+            return Serialized(info, message);            
+        }
+
+        public Task<Guid> String(EventInfo info, string data)
+        {
+            var message = new NoMetaDataStringMessage(data);
+            return String(info, message);
         }
     }
 }

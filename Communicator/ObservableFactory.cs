@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
 using Communicator.Obserables;
+using System.Collections.Generic;
 
 namespace Communicator
 {
@@ -12,6 +13,12 @@ namespace Communicator
         IObservable<IMessage<string, T>> GetString<T>(string eventName) where T: new();
         IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName) where D: new() where M : new();
         IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new();
+
+        IObservable<IMessage<byte[], List<MetaData>>> GetBinary(string eventName);
+        IObservable<IMessage<string, List<MetaData>>> GetString(string eventName);
+        IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName) where T : new();
+        IObservable<IMessage<string, List<MetaData>>> GetOnConnected();
+
         IObservable<string> GetOnDisconnected();
     }
 
@@ -46,6 +53,26 @@ namespace Communicator
         public IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new()
         {
             return new ConnectedObservable<T>(this.Connection, this.DefaultDeserializer);
+        }
+
+        public IObservable<IMessage<byte[], List<MetaData>>> GetBinary(string eventName)
+        {
+            return new BinaryObservable(this.Connection, eventName);
+        }
+
+        public IObservable<IMessage<string, List<MetaData>>> GetString(string eventName)
+        {
+            return new StringObservable(this.Connection, eventName);
+        }
+
+        public IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName) where T : new()
+        {
+            return new StringSerializedObservable<T>(this.Connection, this.DefaultDeserializer, eventName);
+        }
+
+        public IObservable<IMessage<string, List<MetaData>>> GetOnConnected()
+        {
+            return new ConnectedObservable(this.Connection);
         }
     }
 }
