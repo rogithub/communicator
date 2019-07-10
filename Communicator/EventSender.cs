@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
+using System.Collections.Generic;
 
 namespace Communicator
 {
@@ -9,6 +10,7 @@ namespace Communicator
     {        
         Task<Guid> Binary<M>(EventInfo info, BinaryMessage<M> message) where M : new();
         Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message) where D : new() where M : new();
+        Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer custom) where D : new() where M : new();
         Task<Guid> String<M>(EventInfo info, StringMessage<M> message) where M : new();        
 
         Task<Guid> Binary(EventInfo info, byte[] message);
@@ -17,6 +19,7 @@ namespace Communicator
 
         Task<Guid> Binary(EventInfo info, BinaryMessage message);
         Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new();
+        Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer custom) where T : new();
         Task<Guid> String(EventInfo info, StringMessage message);
     }
 
@@ -67,17 +70,29 @@ namespace Communicator
 
         public Task<Guid> Binary(EventInfo info, BinaryMessage message)
         {
-            return Binary(info, message);
+            return Binary<List<MetaData>>(info, message);
         }
 
         public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new()
         {
-            return Serialized<T>(info, message);
+            return Serialized<T, List<MetaData>>(info, message);
         }
 
         public Task<Guid> String(EventInfo info, StringMessage message)
         {
-            return String(info, message);
+            return String<List<MetaData>>(info, message);
+        }
+
+        public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer custom)
+            where D : new()
+            where M : new()
+        {            
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, custom.Serialize(message.MetaData), custom.Serialize(message.Data));
+        }
+
+        public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer custom) where T : new()
+        {
+            return Serialized<T, List<MetaData>>(info, message, custom);
         }
     }
 }
