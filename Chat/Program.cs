@@ -25,11 +25,11 @@ namespace Chat
 			IEventSource source = EventSourceFactory.Get(url, new JsonSerializer());
 			
 			List<MetaData> mtdt = new List<MetaData>();
-			mtdt.SetUser(userName);
+			mtdt.Set("user", userName);
 
 			source.Connect(mtdt).GetAwaiter().GetResult();
 			
-			mtdt.SetId(source.ConnectionId);
+			mtdt.Set("id", source.ConnectionId);
 			Connections.AddUser(mtdt);
 			Console.WriteLine($"Welcome: {userName}!");
 
