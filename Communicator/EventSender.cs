@@ -10,7 +10,7 @@ namespace Communicator
     {        
         Task<Guid> Binary<M>(EventInfo info, BinaryMessage<M> message) where M : new();
         Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message) where D : new() where M : new();
-        Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer custom) where D : new() where M : new();
+        Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer) where D : new() where M : new();
         Task<Guid> String<M>(EventInfo info, StringMessage<M> message) where M : new();        
 
         Task<Guid> Binary(EventInfo info, byte[] message);
@@ -19,7 +19,7 @@ namespace Communicator
 
         Task<Guid> Binary(EventInfo info, BinaryMessage message);
         Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new();
-        Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer custom) where T : new();
+        Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer) where T : new();
         Task<Guid> String(EventInfo info, StringMessage message);
     }
 
@@ -83,16 +83,16 @@ namespace Communicator
             return String<List<MetaData>>(info, message);
         }
 
-        public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer custom)
+        public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer)
             where D : new()
             where M : new()
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, custom.Serialize(message.MetaData), custom.Serialize(message.Data));
+            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, metaSerializer.Serialize(message.MetaData), dataSerializer.Serialize(message.Data));
         }
 
-        public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer custom) where T : new()
+        public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer) where T : new()
         {
-            return Serialized<T, List<MetaData>>(info, message, custom);
+            return Serialized<T, List<MetaData>>(info, message, dataSerializer, metaSerializer);
         }
     }
 }
