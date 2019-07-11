@@ -13,8 +13,15 @@ namespace Communicator.Obserables
         public IDisposable Subscribe(IObserver<string> observer)
         {            
             return this.Connection.On<string>(EventNames.OnDisconnected, connectionId => {
-                observer.OnNext(connectionId);
-                observer.OnCompleted();
+                try 
+                {                                        
+                    observer.OnNext(connectionId);
+                    observer.OnCompleted();
+                }
+                catch (Exception ex)
+                {
+                    observer.OnError(ex);
+                }                
             });
         } 
     }

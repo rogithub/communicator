@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 

@@ -9,20 +9,18 @@ namespace Communicator
 
     public interface IObservableFactory
     {
+        IObservable<string> GetOnDisconnected();
         IObservable<IMessage<byte[], T>> GetBinary<T>(string eventName) where T: new();
         IObservable<IMessage<string, T>> GetString<T>(string eventName) where T: new();
         IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName) where D: new() where M : new();
-        IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where D: new() where M : new();
-        
+        IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where D: new() where M : new();        
         IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new();
 
         IObservable<IMessage<byte[], List<KeyValue>>> GetBinary(string eventName);
         IObservable<IMessage<string, List<KeyValue>>> GetString(string eventName);
         IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName) where T : new();
         IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T: new();
-        IObservable<IMessage<string, List<KeyValue>>> GetOnConnected();
-
-        IObservable<string> GetOnDisconnected();
+        IObservable<IMessage<string, List<KeyValue>>> GetOnConnected();        
     }
 
     internal class ObservableFactory : IObservableFactory
