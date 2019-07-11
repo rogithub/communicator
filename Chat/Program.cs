@@ -3,6 +3,7 @@ using Communicator;
 using System.IO;
 using System.Collections.Generic;
 using Communicator.Core;
+using System.Threading.Tasks;
 
 namespace Chat
 {
@@ -23,15 +24,25 @@ namespace Chat
 
 			string url = "http://localhost:5000/communicator";
 			IEventSource source = EventSourceFactory.Get(url, new JsonSerializer());
-			
 			List<KeyValue> mtdt = new List<KeyValue>();
 			mtdt.Set("user", userName);
 
-			source.Connect(mtdt).GetAwaiter().GetResult();
-			
+			source.Connect(mtdt).ContinueWith( t => { 
+				Console.WriteLine("{0}", url);
+				Console.WriteLine("Error when trying to connect");
+				Console.WriteLine("{0}: {1}",
+				t.Exception.InnerException.GetType().Name,
+				t.Exception.InnerException.Message);
+				
+				Console.WriteLine();
+
+			}, TaskContinuationOptions.OnlyOnFaulted).GetAwaiter().GetResult();
+	
 			mtdt.Set("id", source.ConnectionId);
 			Connections.AddUser(mtdt);
 			Console.WriteLine($"Welcome: {userName}!");
+			Action help = () => Console.WriteLine("keywords [ help, users, clear, file, to, person, quit ]");
+			help();
 
 			var onDisconnected = source.Observables.GetOnDisconnected();
 			var onConnected = source.Observables.GetOnConnected();
@@ -82,10 +93,13 @@ namespace Chat
 
 			do
 			{
-				message = $"{Environment.NewLine}{StringHelper.DefaultPrompt}".Prompt();
+				message = $"{Environment.NewLine}{StringHelper.DefaultPrompt}".Prompt().Trim();
 
 				switch (message)
 				{
+					case "help":
+						help();
+					break;
 					case "users":
 						Connections.Print();
 					break;
