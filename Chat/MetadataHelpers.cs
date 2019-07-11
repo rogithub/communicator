@@ -9,7 +9,7 @@ namespace Chat
 
     public static class MetaDataHelper
     {
-		public static void SetFileInfo(this List<MetaData> md, string path)
+		public static void SetFileInfo(this List<KeyValue> md, string path)
 		{
 			FileInfo info = new FileInfo(path);
 			md.Set("fileName", info.Name);

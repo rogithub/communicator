@@ -12,9 +12,9 @@ namespace Communicator.Core
 
     }
 
-    public class StringMessage : StringMessage<List<MetaData>>
+    public class StringMessage : StringMessage<List<KeyValue>>
     {        
-        public StringMessage(string data, List<MetaData> metaData): base (data, metaData)
+        public StringMessage(string data, List<KeyValue> metaData): base (data, metaData)
         {
 
         }

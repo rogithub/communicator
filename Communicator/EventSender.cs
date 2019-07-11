@@ -70,17 +70,17 @@ namespace Communicator
 
         public Task<Guid> Binary(EventInfo info, BinaryMessage message)
         {
-            return Binary<List<MetaData>>(info, message);
+            return Binary<List<KeyValue>>(info, message);
         }
 
         public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message) where T : new()
         {
-            return Serialized<T, List<MetaData>>(info, message);
+            return Serialized<T, List<KeyValue>>(info, message);
         }
 
         public Task<Guid> String(EventInfo info, StringMessage message)
         {
-            return String<List<MetaData>>(info, message);
+            return String<List<KeyValue>>(info, message);
         }
 
         public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer)
@@ -92,7 +92,7 @@ namespace Communicator
 
         public Task<Guid> Serialized<T>(EventInfo info, StringSerializedMessage<T> message, IStringSerializer dataSerializer , IStringSerializer metaSerializer) where T : new()
         {
-            return Serialized<T, List<MetaData>>(info, message, dataSerializer, metaSerializer);
+            return Serialized<T, List<KeyValue>>(info, message, dataSerializer, metaSerializer);
         }
     }
 }

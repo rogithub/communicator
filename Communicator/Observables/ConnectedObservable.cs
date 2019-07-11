@@ -34,7 +34,7 @@ namespace Communicator.Obserables
         }    
     }
 
-    internal class ConnectedObservable : ObservableBase<string, List<MetaData>>
+    internal class ConnectedObservable : ObservableBase<string, List<KeyValue>>
     {                
         public ConnectedObservable(HubConnection connection)
         : base(connection, null, EventNames.OnConnected)
@@ -42,13 +42,13 @@ namespace Communicator.Obserables
             
         }             
         
-        public override IDisposable Subscribe(IObserver<IMessage<string, List<MetaData>>> observer)
+        public override IDisposable Subscribe(IObserver<IMessage<string, List<KeyValue>>> observer)
         {               
-            return this.Connection.On<List<MetaData>, string>(EventNames.OnConnected, (metaData, data) =>
+            return this.Connection.On<List<KeyValue>, string>(EventNames.OnConnected, (metaData, data) =>
             {
                 try 
                 {                                        
-                    IMessage<string, List<MetaData>> message = new StringMessage<List<MetaData>>(data, metaData);
+                    IMessage<string, List<KeyValue>> message = new StringMessage<List<KeyValue>>(data, metaData);
                     
                     observer.OnNext(message); 
                     observer.OnCompleted();

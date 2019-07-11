@@ -16,11 +16,11 @@ namespace Communicator
         
         IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new();
 
-        IObservable<IMessage<byte[], List<MetaData>>> GetBinary(string eventName);
-        IObservable<IMessage<string, List<MetaData>>> GetString(string eventName);
-        IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName) where T : new();
-        IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T: new();
-        IObservable<IMessage<string, List<MetaData>>> GetOnConnected();
+        IObservable<IMessage<byte[], List<KeyValue>>> GetBinary(string eventName);
+        IObservable<IMessage<string, List<KeyValue>>> GetString(string eventName);
+        IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName) where T : new();
+        IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T: new();
+        IObservable<IMessage<string, List<KeyValue>>> GetOnConnected();
 
         IObservable<string> GetOnDisconnected();
     }
@@ -58,22 +58,22 @@ namespace Communicator
             return new ConnectedObservable<T>(this.Connection, this.DefaultDeserializer);
         }
 
-        public IObservable<IMessage<byte[], List<MetaData>>> GetBinary(string eventName)
+        public IObservable<IMessage<byte[], List<KeyValue>>> GetBinary(string eventName)
         {            
-            return new BinaryObservable<List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
+            return new BinaryObservable<List<KeyValue>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
-        public IObservable<IMessage<string, List<MetaData>>> GetString(string eventName)
+        public IObservable<IMessage<string, List<KeyValue>>> GetString(string eventName)
         {
-            return new StringObservable<List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
+            return new StringObservable<List<KeyValue>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
-        public IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName) where T : new()
+        public IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName) where T : new()
         {
-            return new StringSerializedObservable<T, List<MetaData>>(this.Connection, this.DefaultDeserializer, eventName);
+            return new StringSerializedObservable<T, List<KeyValue>>(this.Connection, this.DefaultDeserializer, eventName);
         }
 
-        public IObservable<IMessage<string, List<MetaData>>> GetOnConnected()
+        public IObservable<IMessage<string, List<KeyValue>>> GetOnConnected()
         {
             return new ConnectedObservable(this.Connection);
         }
@@ -85,9 +85,9 @@ namespace Communicator
             return new CustomSerializedObservable<D, M>(this.Connection, eventName, dataDeserializer, metaDeserializer);
         }
 
-        public IObservable<IMessage<T, List<MetaData>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T : new()
+        public IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T : new()
         {
-            return new CustomSerializedObservable<T, List<MetaData>>(this.Connection, eventName, dataDeserializer, metaDeserializer);
+            return new CustomSerializedObservable<T, List<KeyValue>>(this.Connection, eventName, dataDeserializer, metaDeserializer);
         }
     }
 }

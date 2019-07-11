@@ -11,9 +11,9 @@ namespace Communicator.Core
         }        
     }
 
-    public class BinaryMessage : BinaryMessage<List<MetaData>>
+    public class BinaryMessage : BinaryMessage<List<KeyValue>>
     {                
-        public BinaryMessage(byte[] data, List<MetaData> metaData): base (data, metaData)
+        public BinaryMessage(byte[] data, List<KeyValue> metaData): base (data, metaData)
         {
             
         }        
