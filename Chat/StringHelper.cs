@@ -13,7 +13,10 @@ namespace Chat
 		}
         public static void PrintHelp()
 		{
-			Console.Error.WriteLine("Chat [username]");
+			Console.Error.WriteLine("$ dotnet run [username]");
+			Console.Error.WriteLine("Error username not provided.");
+			Console.Error.WriteLine();
+					
 		}
 
 		public static void Print(this string message)
