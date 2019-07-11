@@ -1,4 +1,3 @@
-
 using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;

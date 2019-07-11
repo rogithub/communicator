@@ -1,4 +1,3 @@
-
 namespace Communicator.Core
 {
     public abstract class MessageBase<D, M> : IMessage<D, M> where M: new()

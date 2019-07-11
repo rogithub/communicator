@@ -8,11 +8,10 @@
     <Company>ro-mx</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
+</PropertyGroup>
 
   <ItemGroup>
-    <None Include="LICENSE.txt" Pack="true" PackagePath="" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
+      <None Include="LICENSE.txt" Pack="true" PackagePath="" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
   </ItemGroup>
-
 </Project>

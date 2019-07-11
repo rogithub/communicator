@@ -7,8 +7,8 @@ using Communicator.Core;
 namespace Chat
 {
     class Program
-	{				
-		private static ActiveConnections Connections { get; set; }
+    {
+        private static ActiveConnections Connections { get; set; }
 		static void Main(string[] args)
 		{
 			if (args.Length == 0)
@@ -130,6 +130,6 @@ namespace Chat
 				}				
 			} 
 			while (!exit);
-		}
-	}
+        }
+    }
 }
