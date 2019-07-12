@@ -81,7 +81,7 @@ From a different application (or the same one) you create an IObservableFactory
 using a live (opened) IEventSource.
 
 ```cs
-var factory = source.GetObservablesFactory(jsonSerializer);
+var factory = source.GetObservablesFactory(deserializer);
 
 var chatObservable = factory.GetString("Chat");
 var fileObservable = factory.GetBinary("File");
