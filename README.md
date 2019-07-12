@@ -10,7 +10,7 @@ This is a
 ### Communicator
 This is the library you will install on your projects to be able to send and receive messages.
 ### Chat
-This is a demo implementation of the Communicator library.
+This is a demo app using the Communicator library to send strings, files and js serialized objects.
 
 ## The library
 ### There are three types of messages:
