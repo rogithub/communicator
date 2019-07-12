@@ -41,11 +41,20 @@ Predefined classes exist to send the three kind of messages:
 ```
 
 ### Default Metadata
-Since metadata would be so common there is a default implementation that is a generic list of KeyValue objects. You can find that class under:
+Since metadata would be so common there is a default implementation that is a generic list of KeyValue objects.
+You can find that class under Communicator.Core namespace.
 
 ```cs
-Communicator.Core.KeyValue
+List<KeyValue> metadata = new List<KeyValue>();
+
+Some helpers are included under the same namespace to add/read values.
 ```
+
+```cs
+metadata.set("user", username);
+var id = metadata.get("id");
+```
+
 
 ## Library Usage
 
