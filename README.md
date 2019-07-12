@@ -48,11 +48,13 @@ You can find that class under Communicator.Core namespace.
 List<KeyValue> metadata = new List<KeyValue>();
 
 ```
-Convinient helper methods are included under the same namespace to add/read values preventing key dupplication.
+Convinient helper methods are provided under the same namespace to add/read values preventing key dupplication.
 
 ```cs
 metadata.set("user", username);
 var id = metadata.get("id");
+
+bool hasUserKey = metadata.Exists("user");
 ```
 
 
