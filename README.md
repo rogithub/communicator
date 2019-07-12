@@ -4,12 +4,12 @@ This is a proof of concept to send events between different dotnet/js applicatio
 
 
 ## Contents
-### Server
+### Server (dotnet core MVC)
 This is a
 [signalr](https://dotnet.microsoft.com/apps/aspnet/real-time) server in charge of receiving events and broadcasting them over listeners.
-### Communicator
+### Communicator (dotnet core library)
 This is the library you will install on your projects to be able to send and receive messages.
-### Chat
+### Chat (dotnet core console app)
 This is a demo app using the Communicator library to send strings, files and js serialized objects.
 
 ## The library
