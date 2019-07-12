@@ -1,64 +1,29 @@
 using System;
-using System.Collections.Generic;
-using Communicator.Core;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
-    internal class ConnectedObservable<T> : ObservableBase<string, T> where T: new()
+    internal class ConnectedObservable : IObservable<string>
     {                
-        public ConnectedObservable(HubConnection connection, IStringDeserializer serializer)
-        : base(connection, serializer, EventNames.OnConnected)
+        protected HubConnection Connection { get; set; }
+        public ConnectedObservable(HubConnection connection)        
         {
-            
-        }             
-        
-        public override IDisposable Subscribe(IObserver<IMessage<string, T>> observer)
-        {               
-            return this.Connection.On<string, string>(EventNames.OnConnected, (meta, data) =>
-            {
-                try 
-                {                    
-                    T metaData = DefaultSerializer.Deserialize<T>(meta);
-                    
-                    IMessage<string, T> message = new StringMessage<T>(data, metaData);
-                    
-                    observer.OnNext(message); 
+            this.Connection = connection;
+        }            
+        public IDisposable Subscribe(IObserver<string> observer)
+        {            
+            return this.Connection.On<string>(EventNames.OnConnected, connectionId => {
+                try
+                {
+                    observer.OnNext(connectionId);
                     observer.OnCompleted();
                 }
                 catch (Exception ex)
                 {
                     observer.OnError(ex);
-                }
+                }                
             });
-        }    
-    }
-
-    internal class ConnectedObservable : ObservableBase<string, List<KeyValue>>
-    {                
-        public ConnectedObservable(HubConnection connection)
-        : base(connection, null, EventNames.OnConnected)
-        {
-            
-        }             
-        
-        public override IDisposable Subscribe(IObserver<IMessage<string, List<KeyValue>>> observer)
-        {               
-            return this.Connection.On<List<KeyValue>, string>(EventNames.OnConnected, (metaData, data) =>
-            {
-                try 
-                {                                        
-                    IMessage<string, List<KeyValue>> message = new StringMessage<List<KeyValue>>(data, metaData);
-                    
-                    observer.OnNext(message); 
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
-        }
+        } 
     }
 
 }

@@ -7,44 +7,48 @@ namespace Communicator
 {
     public interface IEventSource 
     {
-        IObservableFactory Observables { get; }
-        IEventSender Send { get; }
-        string ConnectionId { get; }
-        Task<Guid> Connect<T>(T metaData) where T : new();
+        IObservableFactory GetObservablesFactory(IStringDeserializer deserializer);
+        IEventSender GetEventSender(IStringSerializer serializer);
+        Task<string> GetConnectionId();
+        Task Connect();
     }
 
     public static class EventSourceFactory
     {
-        public static IEventSource Get(string urlServer, IDataSerializer dataSerializer)
+        public static IEventSource Get(string urlServer)
         {
-            return new EventSource(urlServer, dataSerializer);
+            return new EventSource(urlServer);
         }
     }
 
 
     internal class EventSource : IEventSource
     {
-        private HubConnection Connection { get; set; }
-        public IObservableFactory Observables {get; private set;}
-        public IEventSender Send {get; private set;}
-        public IDataSerializer DataSerializer {get; private set;}
+        private HubConnection Connection { get; set; }        
 
-        public string ConnectionId {get; private set;}
-
-        public EventSource(string urlServer, IDataSerializer serializer)
+        public EventSource(string urlServer)
         {
-            this.Connection = ConnectionBuilder.Build(urlServer);
-            this.Observables = new ObservableFactory(this.Connection, serializer);
-            this.Send = new EventSender(this.Connection, serializer);
+            this.Connection = ConnectionBuilder.Build(urlServer);            
         }
 
-        public async Task<Guid> Connect<T>(T metaData) where T: new()
-        {        
-            await Connection.StartAsync();
-            ConnectionId = await Connection.InvokeAsync<string>(EventNames.GetConnectionId);            
-            Guid taskId = await Send.String(new EventInfo(EventNames.OnConnected), new StringMessage<T>(ConnectionId, metaData));
+        public Task Connect()
+        {
+            return Connection.StartAsync();
+        }        
 
-            return taskId;
+        public IObservableFactory GetObservablesFactory(IStringDeserializer deserializer)
+        {
+            return new ObservableFactory(Connection, deserializer);
+        }
+
+        public IEventSender GetEventSender(IStringSerializer serializer)
+        {
+            return new EventSender(Connection, serializer);
+        }
+
+        public Task<string> GetConnectionId()
+        {
+            return Connection.InvokeAsync<string>(EventNames.GetConnectionId); 
         }
     }
 }

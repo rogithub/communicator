@@ -10,23 +10,23 @@ namespace Communicator
     public interface IObservableFactory
     {
         IObservable<string> GetOnDisconnected();
+        IObservable<string> GetOnConnected();
         IObservable<IMessage<byte[], T>> GetBinary<T>(string eventName) where T: new();
         IObservable<IMessage<string, T>> GetString<T>(string eventName) where T: new();
         IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName) where D: new() where M : new();
         IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where D: new() where M : new();        
-        IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new();
-
+        
         IObservable<IMessage<byte[], List<KeyValue>>> GetBinary(string eventName);
         IObservable<IMessage<string, List<KeyValue>>> GetString(string eventName);
         IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName) where T : new();
-        IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T: new();
-        IObservable<IMessage<string, List<KeyValue>>> GetOnConnected();        
+        IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer) where T: new();    
     }
 
     internal class ObservableFactory : IObservableFactory
     {
         private HubConnection Connection { get; set; }
         private IStringDeserializer DefaultDeserializer { get; set; }
+        
         public ObservableFactory(HubConnection connection, IStringDeserializer deserializer)
         {
             this.Connection = connection;
@@ -50,10 +50,9 @@ namespace Communicator
         {
             return new DisconnectedObservable(this.Connection);
         }
-
-        public IObservable<IMessage<string, T>> GetOnConnected<T>() where T: new()
+        public IObservable<string> GetOnConnected()
         {
-            return new ConnectedObservable<T>(this.Connection, this.DefaultDeserializer);
+            return new ConnectedObservable(this.Connection);
         }
 
         public IObservable<IMessage<byte[], List<KeyValue>>> GetBinary(string eventName)
@@ -69,12 +68,7 @@ namespace Communicator
         public IObservable<IMessage<T, List<KeyValue>>> GetSerialized<T>(string eventName) where T : new()
         {
             return new StringSerializedObservable<T, List<KeyValue>>(this.Connection, this.DefaultDeserializer, eventName);
-        }
-
-        public IObservable<IMessage<string, List<KeyValue>>> GetOnConnected()
-        {
-            return new ConnectedObservable(this.Connection);
-        }
+        }       
 
         public IObservable<IMessage<D, M>> GetSerialized<D, M>(string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer)
             where D : new()

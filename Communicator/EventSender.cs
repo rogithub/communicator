@@ -52,19 +52,19 @@ namespace Communicator
 
         public Task<Guid> Binary(EventInfo info, byte[] data)
         {
-            var message = new NoMetaDataBinaryMessage(data);
+            var message = new BinaryMessage<List<KeyValue>>(data, new List<KeyValue>());
             return Binary(info, message);            
         }
 
         public Task<Guid> Serialized<T>(EventInfo info, T data) where T : new()
         {
-            var message = new NoMetaDataSerializedMessage<T>(data);
+            var message = new StringSerializedMessage<T, List<KeyValue>>(data, new List<KeyValue>());
             return Serialized(info, message);            
         }
 
         public Task<Guid> String(EventInfo info, string data)
         {
-            var message = new NoMetaDataStringMessage(data);
+            var message = new StringMessage<List<KeyValue>>(data, new List<KeyValue>());
             return String(info, message);
         }
 

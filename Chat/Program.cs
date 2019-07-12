@@ -23,32 +23,29 @@ namespace Chat
 			
 
 			string url = "http://localhost:5000/communicator";
-			IEventSource source = EventSourceFactory.Get(url, new JsonSerializer());
+			var jsonSerializer = new JsonSerializer();
+			IEventSource source = EventSourceFactory.Get(url);						
+
+			source.Connect().GetAwaiter().GetResult();
+			string connectionId = source.GetConnectionId().GetAwaiter().GetResult();
+
 			List<KeyValue> mtdt = new List<KeyValue>();
-			mtdt.Set("user", userName);
+			mtdt.Set("user", userName);	
+			mtdt.Set("id", connectionId);
 
-			source.Connect(mtdt).ContinueWith( t => { 
-				Console.WriteLine("{0}", url);
-				Console.WriteLine("Error when trying to connect");
-				Console.WriteLine("{0}: {1}",
-				t.Exception.InnerException.GetType().Name,
-				t.Exception.InnerException.Message);
-				
-				Console.WriteLine();
-
-			}, TaskContinuationOptions.OnlyOnFaulted).GetAwaiter().GetResult();
-	
-			mtdt.Set("id", source.ConnectionId);
+			var sender = source.GetEventSender(jsonSerializer);
+			var observables = source.GetObservablesFactory(jsonSerializer);
+			sender.String(new EventInfo("UserConnected"), new StringMessage(connectionId, mtdt));
 			Connections.AddUser(mtdt);
 			Console.WriteLine($"Welcome: {userName}!");
 			Action help = () => Console.WriteLine("keywords [ help, users, clear, file, to, person, quit ]");
 			help();
 
-			var onDisconnected = source.Observables.GetOnDisconnected();
-			var onConnected = source.Observables.GetOnConnected();
-			var onChat = source.Observables.GetString("Chat");
-			var onFile = source.Observables.GetBinary("File");
-			var onPerson = source.Observables.GetSerialized<Person>("Person");
+			var onDisconnected = observables.GetOnDisconnected();
+			var onConnected = observables.GetString("UserConnected");
+			var onChat = observables.GetString("Chat");
+			var onFile = observables.GetBinary("File");
+			var onPerson = observables.GetSerialized<Person>("Person");
 
 			onConnected.Subscribe(m => Connections.AddUser(m.MetaData));
 			onChat.Subscribe(m => Connections.AddUser(m.MetaData));
@@ -107,7 +104,7 @@ namespace Chat
 						Console.Clear();
 						break;
 					case "quit":
-						source.Send.String(new EventInfo("Chat"), new StringMessage("Disconnected", mtdt));
+						sender.String(new EventInfo("Chat"), new StringMessage("Disconnected", mtdt));
 						return;
 					case "file":
 						path = "Enter path: ".Prompt();
@@ -115,7 +112,7 @@ namespace Chat
 						{
 							byte[] bytes = System.IO.File.ReadAllBytes(path);
 							mtdt.SetFileInfo(path);
-							source.Send.Binary(new EventInfo("File"), new BinaryMessage(bytes, mtdt));							
+							sender.Binary(new EventInfo("File"), new BinaryMessage(bytes, mtdt));							
 						}
 						break;					
 					case "to":
@@ -124,7 +121,7 @@ namespace Chat
 						if (!string.IsNullOrWhiteSpace(to))
 						{
 							message = $"Private message for {user}: ".Prompt();
-							source.Send.String(new EventInfo("Chat", to, null), new StringMessage(message, mtdt));
+							sender.String(new EventInfo("Chat", to, null), new StringMessage(message, mtdt));
 						}else
 						{
 							Console.WriteLine($"User not found: {user}");
@@ -136,10 +133,10 @@ namespace Chat
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
 						Person p = new Person() { Name = name, Age = age };						
-						source.Send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, mtdt));
+						sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, mtdt));
 					break;
 					default:						
-						source.Send.String(new EventInfo("Chat"), new StringMessage(message, mtdt));
+						sender.String(new EventInfo("Chat"), new StringMessage(message, mtdt));
 						break;
 				}				
 			} 
