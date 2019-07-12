@@ -77,7 +77,7 @@ send.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
 
 
 ### Receiving messages
-From a different application (or the same one) you create an IObservablesFactory
+From a different application (or the same one) you create an IObservableFactory
 using a live (opened) IEventSource.
 
 ```cs
