@@ -48,7 +48,7 @@ You can find that class under Communicator.Core namespace.
 List<KeyValue> metadata = new List<KeyValue>();
 
 ```
-Some helpers are included under the same namespace to add/read values.
+Convinient helper methods are included under the same namespace to add/read values preventing key dupplication.
 
 ```cs
 metadata.set("user", username);
