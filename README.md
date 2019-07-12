@@ -37,7 +37,7 @@ Predefined classes exist to send the three kind of messages:
 
   BinaryMessage(byte[] data, T metaData);
 
-  StringSerializedMessage(T data, T metaData);
+  StringSerializedMessage(D data, M metaData);
 ```
 
 ### Default Metadata
