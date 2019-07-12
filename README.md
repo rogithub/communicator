@@ -75,7 +75,7 @@ Before any event takes place we must open a connection.
 source.Connect().GetAwaiter().GetResult(); 
 ```
 
-### Sending my first event
+### Sending messages
 In order to send events we instantiate an IEventSender object then we use
 one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
 
