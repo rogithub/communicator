@@ -98,7 +98,8 @@ var onChatObservable.Subscribe(myObserver);
 C# Introduced, IObserver<T> and IObservable<T> which will help push-based notification,
 also known as the observer design pattern. The IObservable<T> interface represents
 the class that sends notifications (the provider); the IObserver<T> interface represents
-the class that receives them (the observer) this pattern can be even better by installing [reactivex](reactivex.io). 
+the class that receives them (the observer) this pattern can be even better by installing
+[reactivex](https://www.nuget.org/packages/System.Reactive). 
 
 
 ## Library Installation
@@ -120,4 +121,10 @@ cd Chat
 dotnet run [username]
 ```
 
+## Next steps
+I would like to add groups support for reducing event names collision.
+Also it would be nice to write a JavaScript version of the Communicator 
+library.
 
+## See also
+[reactive.io](http://reactivex.io/)
