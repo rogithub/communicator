@@ -83,16 +83,16 @@ using a live (opened) IEventSource.
 ```cs
 var factory = source.GetObservablesFactory(jsonSerializer);
 
-var onChatObservable = factory.GetString("Chat");
-var onFileObservable = factory.GetBinary("File");
-var onPersonObservable = factory.GetSerialized<Person>("Person");
+var chatObservable = factory.GetString("Chat");
+var fileObservable = factory.GetBinary("File");
+var personObservable = factory.GetSerialized<Person>("Person");
 ```
 
 Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
 
 ```cs
 IObserver myObserver = ...
-var onChatObservable.Subscribe(myObserver);
+var chatObservable.Subscribe(myObserver);
 ```
 
 C# Introduced, IObserver<T> and IObservable<T> which will help push-based notification,
