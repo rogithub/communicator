@@ -69,10 +69,10 @@ In order to send events we instantiate an IEventSender object then we use
 one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
 
 ```cs
-var sender = source.GetEventSender(serializer);
-sender.String(new EventInfo("Chat"), new StringMessage(message, metadata));
-sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, metadata));
-sender.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
+var send = source.GetEventSender(serializer);
+send.String(new EventInfo("Chat"), new StringMessage(message, metadata));
+send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, metadata));
+send.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
 ```
 
 
