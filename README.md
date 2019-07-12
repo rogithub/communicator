@@ -92,9 +92,6 @@ var onFileObservable = factory.GetBinary("File");
 var onPersonObservable = factory.GetSerialized<Person>("Person");
 ```
 
-Using IObservable liberates all potential from [reactivex](reactivex.io) in our consummer app.
-I strongly recommend you to use it.
-
 Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
 
 ```cs
