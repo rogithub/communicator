@@ -49,6 +49,7 @@ Communicator.Core.KeyValue
 
 ## Library Installation
 Library is provided as a nuget package.
+[https://www.nuget.org/packages/Communicator](https://www.nuget.org/packages/Communicator)
 
 ## Library Usage:
 
@@ -67,30 +68,28 @@ Before any event takes place we must open a connection.
 source.Connect().GetAwaiter().GetResult(); 
 ```
 
-### Sending my first string event.
+### Sending my first event.
 In order to send events we instantiate an IEventSender object then we use
 one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
 
 ```cs
 var sender = source.GetEventSender(serializer);
-sender.String(new EventInfo("Chat"), new StringMessage(message, mtdt));
+sender.String(new EventInfo("Chat"), new StringMessage(message, metadata));
 sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, metadata));
 sender.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
 ```
 
 
 ### Receiving messages
-From a different application (or the same one) you create an IEventSource then you open the connection
-and then you will be able to receive messages, but first you must create an
-[IObservable](https://docs.microsoft.com/en-us/dotnet/api/system.iobservable-1?view=netframework-4.8)
-for each kind of event you want to listen for.
+From a different application (or the same one) you create an IObservablesFactory
+using a live (opened) IEventSource.
 
 ```cs
-var observables = source.GetObservablesFactory(jsonSerializer);
+var factory = source.GetObservablesFactory(jsonSerializer);
 
-var onChatObservable = observables.GetString("Chat");
-var onFileObservable = observables.GetBinary("File");
-var onPersonObservable = observables.GetSerialized<Person>("Person");
+var onChatObservable = factory.GetString("Chat");
+var onFileObservable = factory.GetBinary("File");
+var onPersonObservable = factory.GetSerialized<Person>("Person");
 ```
 
 Using IObservable liberates all potential from [reactivex](reactivex.io) in our consummer app.
