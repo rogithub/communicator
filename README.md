@@ -47,10 +47,6 @@ Since metadata would be so common there is a default implementation that is a ge
 Communicator.Core.KeyValue
 ```
 
-## Library Installation
-Library is provided as a nuget package.
-[https://www.nuget.org/packages/Communicator](https://www.nuget.org/packages/Communicator)
-
 ## Library Usage:
 
 ### Create an EventSource
@@ -124,6 +120,4 @@ cd Chat
 dotnet run [username]
 ```
 
-## See also
-[reactivex](reactivex.io)
 
