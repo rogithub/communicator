@@ -30,7 +30,7 @@ public interface IMessage<D, M>
 }
 ```
 
-Exits predefined classes to send the three kind of messages:
+Predefined classes exist to send the three kind of messages:
 
 ```cs
   StringMessage(string data, T metaData);
@@ -46,6 +46,67 @@ Since metadata would be so common there is a default implementation that is a ge
 ```cs
 Communicator.Core.KeyValue
 ```
+
+## Library Installation
+Library is provided as a nuget package.
+
+## Library Usage:
+
+### Create an EventSource
+First step is get an IEventSource object passing the server url as argument.
+
+```cs
+string url = "http://localhost:5000/communicator";
+IEventSource source = EventSourceFactory.Get(url); 
+```
+
+### Open a connection to the server
+Before any event takes place we must open a connection.
+
+```cs
+source.Connect().GetAwaiter().GetResult(); 
+```
+
+### Sending my first string event.
+In order to send events we instantiate an IEventSender object then we use
+one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
+
+```cs
+var sender = source.GetEventSender(serializer);
+sender.String(new EventInfo("Chat"), new StringMessage(message, mtdt));
+sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, metadata));
+sender.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
+```
+
+
+### Receiving messages
+From a different application (or the same one) you create an IEventSource then you open the connection
+and then you will be able to receive messages, but first you must create an
+[IObservable](https://docs.microsoft.com/en-us/dotnet/api/system.iobservable-1?view=netframework-4.8)
+for each kind of event you want to listen for.
+
+```cs
+var observables = source.GetObservablesFactory(jsonSerializer);
+
+var onChatObservable = observables.GetString("Chat");
+var onFileObservable = observables.GetBinary("File");
+var onPersonObservable = observables.GetSerialized<Person>("Person");
+```
+
+Using IObservable liberates all potential from [reactivex](reactivex.io) in our consummer app.
+I strongly recommend you to use it.
+
+Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
+
+```cs
+IObserver myObserver = ...
+var onChatObservable.Subscribe(myObserver);
+```
+
+C# Introduced, IObserver<T> and IObservable<T> which will help push-based notification,
+also known as the observer design pattern. The IObservable<T> interface represents
+the class that sends notifications (the provider); the IObserver<T> interface represents
+the class that receives them (the observer) this pattern can be even better by installing [reactivex](reactivex.io). 
 
 
 ## Library Installation
