@@ -4,7 +4,7 @@ This is a proof of concept to send events between different dotnet/js applicatio
 
 
 ## Contents
-### Server:
+### Server
 This is a
 [signalr](https://dotnet.microsoft.com/apps/aspnet/real-time) server in charge of receiving events and broadcasting them over listeners.
 ### Communicator
@@ -47,7 +47,7 @@ Since metadata would be so common there is a default implementation that is a ge
 Communicator.Core.KeyValue
 ```
 
-## Library Usage:
+## Library Usage
 
 ### Create an EventSource
 First step is get an IEventSource object passing the server url as argument.
@@ -64,7 +64,7 @@ Before any event takes place we must open a connection.
 source.Connect().GetAwaiter().GetResult(); 
 ```
 
-### Sending my first event.
+### Sending my first event
 In order to send events we instantiate an IEventSender object then we use
 one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
 
