@@ -26,17 +26,18 @@ So that a message in the Communicator library has this form:
 public interface IMessage<D, M>
 {
     D Data { get; set; }
-        M MetaData { get; set; }
-	}
-	```
+    M MetaData { get; set; }
+}
+```
 
 Exits predefined classes to send the three kind of messages:
+
 ```cs
-StringMessage(string data, T metaData);
+  StringMessage(string data, T metaData);
 
-BinaryMessage(byte[] data, T metaData);
+  BinaryMessage(byte[] data, T metaData);
 
-StringSerializedMessage(T data, T metaData);
+  StringSerializedMessage(T data, T metaData);
 ```
 
 ### Default Metadata
