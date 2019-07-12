@@ -81,9 +81,9 @@ one of its methods to send all three kinds of messages. Make sure you check all 
 
 ```cs
 var send = source.GetEventSender(serializer);
-send.String(new EventInfo("Chat"), new StringMessage(message, metadata));
-send.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, metadata));
-send.Binary(new EventInfo("File"), new BinaryMessage(bytes, metadata));
+send.String(new EventInfo("OnChat"), new StringMessage(message, metadata));
+send.Serialized(new EventInfo("OnPerson"), new StringSerializedMessage<Person>(p, metadata));
+send.Binary(new EventInfo("OnFile"), new BinaryMessage(bytes, metadata));
 ```
 
 
@@ -94,9 +94,9 @@ using a live (opened) IEventSource.
 ```cs
 var factory = source.GetObservablesFactory(deserializer);
 
-var chatObservable = factory.GetString("Chat");
-var fileObservable = factory.GetBinary("File");
-var personObservable = factory.GetSerialized<Person>("Person");
+var chatObservable = factory.GetString("OnChat");
+var fileObservable = factory.GetBinary("OnFile");
+var personObservable = factory.GetSerialized<Person>("OnPerson");
 ```
 
 Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
