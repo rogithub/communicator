@@ -26,7 +26,15 @@ namespace Chat
 			var jsonSerializer = new JsonSerializer();
 			IEventSource source = EventSourceFactory.Get(url);						
 
-			source.Connect().GetAwaiter().GetResult();
+			try
+			{
+				source.Connect().GetAwaiter().GetResult();
+			}
+			catch
+			{
+				 throw;
+			}
+			
 			string connectionId = source.GetConnectionId().GetAwaiter().GetResult();
 
 			List<KeyValue> mtdt = new List<KeyValue>();
