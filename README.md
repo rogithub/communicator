@@ -94,21 +94,21 @@ using a live (opened) IEventSource.
 ```cs
 var factory = source.GetObservablesFactory(deserializer);
 
-IObservable<StringMessage> chatObservable = factory.GetString("OnChat");
-IObservable<BinaryMessage> fileObservable = factory.GetBinary("OnFile");
-IObservable<StringSerializedMessage<Person>> personObservable = factory.GetSerialized<Person>("OnPerson");
+IObservable<IMessage<string, List<KeyValue>>> chatObservable = factory.GetString("OnChat");
+IObservable<IMessage<byte[], List<KeyValue>>> fileObservable = factory.GetBinary("OnFile");
+IObservable<IMessage<Person, List<KeyValue>>> personObservable = factory.GetSerialized<Person>("OnPerson");
 ```
 
 Once we got an `IObservable<T>` we can attach as many handlers (IObserver) as we want like:
 
 ```cs
-IObserver<StringMessage> myObserver1 = ...
+IObserver<IMessage<string, List<KeyValue>>> myObserver1 = ...
 var chatObservable.Subscribe(myObserver1);
 
-IObserver<BinaryMessage> myObserver2 = ...
+IObserver<IMessage<byte[], List<KeyValue>>> myObserver2 = ...
 var fileObservable.Subscribe(myObserver2);
 
-IObserver<StringSerializedMessage<Person>> myObserver3 = ...
+IObserver<IMessage<Person, List<KeyValue>>> myObserver3 = ...
 var personObservable.Subscribe(myObserver3);
 ```
 
