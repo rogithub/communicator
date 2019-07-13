@@ -99,8 +99,8 @@ IObservable<IMessage<byte[], M>> fileObservable = factory.GetBinary("OnFile");
 IObservable<IMessage<Person, M>> personObservable = factory.GetSerialized<Person>("OnPerson");
 ```
 
-Once we got an `IObservable<T>` we can attach as many handlers (`IObserver<T>`) in our case
-`T` is `IMessage<D,M>` where `D` is the Data type and `M` is the Metadata type. 
+Once we got an `IObservable<T>` we can attach as many handlers (`IObserver<T>`) as we want.
+In our case `T` corresponds to `IMessage<D,M>` where `D` is the Data type and `M` is the Metadata type. 
 
 ```cs
 IObserver<IMessage<string, M>> myObserver1 = ...
