@@ -76,8 +76,9 @@ source.Connect().GetAwaiter().GetResult();
 ```
 
 ### Sending messages
-In order to send events we instantiate an IEventSender object then we use
-one of its methods to send all three kinds of messages. Make sure you check all cool overloads.
+In order to emit events from our application to other applications,
+we instantiate an IEventSender object then we use
+one of its overloads to send all three kinds of messages. 
 
 ```cs
 var send = source.GetEventSender(serializer);
