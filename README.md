@@ -113,7 +113,7 @@ IObserver<IMessage<Person, M>> myObserver3 = ...
 var personObservable.Subscribe(myObserver3);
 ```
 
-C# Introduced the [observer desgin pattern] (https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. 
+C# Introduced the [observer desgin pattern](https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. 
 
 The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
 
