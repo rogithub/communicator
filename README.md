@@ -76,8 +76,7 @@ source.Connect().GetAwaiter().GetResult();
 ```
 
 ### Sending messages
-In order to emit events from our application to other applications,
-we instantiate an IEventSender object then we use
+In order to emit events we instantiate an IEventSender object then we use
 one of its overloads to send all three kinds of messages. 
 
 ```cs
