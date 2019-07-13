@@ -94,12 +94,12 @@ using a live (opened) IEventSource.
 ```cs
 var factory = source.GetObservablesFactory(deserializer);
 
-var chatObservable = factory.GetString("OnChat");
-var fileObservable = factory.GetBinary("OnFile");
-var personObservable = factory.GetSerialized<Person>("OnPerson");
+IObservable<StringMessage> chatObservable = factory.GetString("OnChat");
+IObservable<BinaryMessage> fileObservable = factory.GetBinary("OnFile");
+IObservable<StringSerializedMessage<Person>> personObservable = factory.GetSerialized<Person>("OnPerson");
 ```
 
-Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
+Once we got an `IObservable<T>` we can attach as many handlers (IObserver) as we want like:
 
 ```cs
 IObserver<StringMessage> myObserver1 = ...
@@ -116,7 +116,7 @@ C# Introduced the [observer desgin pattern] (https://docs.microsoft.com/en-us/do
 
 The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
 
-Having Observables in place you can make use of [reactivex](https://www.nuget.org/packages/System.Reactive) which is something like observer desgin pattern on esteroids. 
+Having Observables in place you can make use of [reactivex](https://www.nuget.org/packages/System.Reactive) which extends the observer design pattern by making streams of events.
 
 
 ## Library Installation
