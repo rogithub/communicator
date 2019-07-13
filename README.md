@@ -104,13 +104,13 @@ In our case `T` corresponds to `IMessage<D,M>` where `D` is the Data type and `M
 
 ```cs
 IObserver<IMessage<string, M>> myObserver1 = ...
-var chatObservable.Subscribe(myObserver1);
+chatObservable.Subscribe(myObserver1);
 
 IObserver<IMessage<byte[], M>> myObserver2 = ...
-var fileObservable.Subscribe(myObserver2);
+fileObservable.Subscribe(myObserver2);
 
 IObserver<IMessage<Person, M>> myObserver3 = ...
-var personObservable.Subscribe(myObserver3);
+personObservable.Subscribe(myObserver3);
 ```
 
 C# Introduced the [observer desgin pattern](https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
