@@ -113,9 +113,7 @@ IObserver<IMessage<Person, M>> myObserver3 = ...
 var personObservable.Subscribe(myObserver3);
 ```
 
-C# Introduced the [observer desgin pattern](https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. 
-
-The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
+C# Introduced the [observer desgin pattern](https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
 
 Having Observables in place you can make use of [reactivex](https://www.nuget.org/packages/System.Reactive) which extends the observer design pattern by making streams of events.
 
