@@ -102,15 +102,21 @@ var personObservable = factory.GetSerialized<Person>("OnPerson");
 Once we got an IObservable we can attach as many handlers (IObserver) as we want like:
 
 ```cs
-IObserver myObserver = ...
-var chatObservable.Subscribe(myObserver);
+IObserver<StringMessage> myObserver1 = ...
+var chatObservable.Subscribe(myObserver1);
+
+IObserver<BinaryMessage> myObserver2 = ...
+var fileObservable.Subscribe(myObserver2);
+
+IObserver<StringSerializedMessage<Person>> myObserver3 = ...
+var personObservable.Subscribe(myObserver3);
 ```
 
-C# Introduced, IObserver<T> and IObservable<T> which will help push-based notification,
-also known as the observer design pattern. The IObservable<T> interface represents
-the class that sends notifications (the provider); the IObserver<T> interface represents
-the class that receives them (the observer) this pattern can be even better by installing
-[reactivex](https://www.nuget.org/packages/System.Reactive). 
+C# Introduced the [observer desgin pattern] (https://docs.microsoft.com/en-us/dotnet/standard/events/observer-design-pattern) which will help push-based notifications. 
+
+The `IObservable<T>` interface represents the class that sends notifications (the provider); the `IObserver<T>` interface represents the class that receives them (the observer). 
+
+Having Observables in place you can make use of [reactivex](https://www.nuget.org/packages/System.Reactive) which is something like observer desgin pattern on esteroids. 
 
 
 ## Library Installation
