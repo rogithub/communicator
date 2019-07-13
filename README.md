@@ -94,21 +94,22 @@ using a live (opened) IEventSource.
 ```cs
 var factory = source.GetObservablesFactory(deserializer);
 
-IObservable<IMessage<string, List<KeyValue>>> chatObservable = factory.GetString("OnChat");
-IObservable<IMessage<byte[], List<KeyValue>>> fileObservable = factory.GetBinary("OnFile");
-IObservable<IMessage<Person, List<KeyValue>>> personObservable = factory.GetSerialized<Person>("OnPerson");
+IObservable<IMessage<string, M>> chatObservable = factory.GetString("OnChat");
+IObservable<IMessage<byte[], M>> fileObservable = factory.GetBinary("OnFile");
+IObservable<IMessage<Person, M>> personObservable = factory.GetSerialized<Person>("OnPerson");
 ```
 
-Once we got an `IObservable<T>` we can attach as many handlers (IObserver) as we want like:
+Once we got an `IObservable<T>` we can attach as many handlers (`IObserver<T>`) in our case
+`T` is `IMessage<D,M>` where `D` is the Data type and `M` is the Metadata type. 
 
 ```cs
-IObserver<IMessage<string, List<KeyValue>>> myObserver1 = ...
+IObserver<IMessage<string, M>> myObserver1 = ...
 var chatObservable.Subscribe(myObserver1);
 
-IObserver<IMessage<byte[], List<KeyValue>>> myObserver2 = ...
+IObserver<IMessage<byte[], M>> myObserver2 = ...
 var fileObservable.Subscribe(myObserver2);
 
-IObserver<IMessage<Person, List<KeyValue>>> myObserver3 = ...
+IObserver<IMessage<Person, M>> myObserver3 = ...
 var personObservable.Subscribe(myObserver3);
 ```
 
