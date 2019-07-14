@@ -80,9 +80,9 @@ In order to emit events we instantiate an IEventSender object then we use
 one of its overloads to send all three kinds of messages. 
 
 ```cs
-var send = source.GetEventSender(serializer);
+var send = source.GetEventSender();
 send.String(new EventInfo("OnChat"), new StringMessage(message, metadata));
-send.Serialized(new EventInfo("OnPerson"), new StringSerializedMessage<Person>(p, metadata));
+send.Serialized(new EventInfo("OnPerson"), new StringSerializedMessage<Person>(p, metadata), serializer);
 send.Binary(new EventInfo("OnFile"), new BinaryMessage(bytes, metadata));
 ```
 
@@ -92,11 +92,11 @@ From a different application (or the same one) you create an IObservableFactory
 using a live (opened) IEventSource.
 
 ```cs
-var factory = source.GetObservablesFactory(deserializer);
+var factory = source.GetObservablesFactory();
 
 IObservable<IMessage<string, M>> chatObservable = factory.GetString("OnChat");
 IObservable<IMessage<byte[], M>> fileObservable = factory.GetBinary("OnFile");
-IObservable<IMessage<Person, M>> personObservable = factory.GetSerialized<Person>("OnPerson");
+IObservable<IMessage<Person, M>> personObservable = factory.GetSerialized<Person>("OnPerson", deserializer);
 ```
 
 Once we got an `IObservable<T>` we can __attach as many handlers (`IObserver<T>`) as we want__.
