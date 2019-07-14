@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
  
   <ItemGroup>
-    <PackageReference Include="Communicator" Version="0.0.3" />   
-    <!-- <ProjectReference Include="..\Communicator\Communicator.csproj" /> -->
+    <!-- <PackageReference Include="Communicator" Version="0.0.3" />    -->
+    <ProjectReference Include="..\Communicator\Communicator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="4.1.5" />

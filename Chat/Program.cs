@@ -3,7 +3,6 @@ using Communicator;
 using System.IO;
 using System.Collections.Generic;
 using Communicator.Core;
-using System.Threading.Tasks;
 
 namespace Chat
 {
@@ -33,8 +32,8 @@ namespace Chat
 			mtdt.Set("user", userName);	
 			mtdt.Set("id", connectionId);
 
-			var sender = source.GetEventSender(jsonSerializer);
-			var observables = source.GetObservablesFactory(jsonSerializer);
+			var sender = source.GetEventSender();
+			var observables = source.GetObservablesFactory();
 			sender.String(new EventInfo("UserConnected"), new StringMessage(connectionId, mtdt));
 			Connections.AddUser(mtdt);
 			Console.WriteLine($"Welcome: {userName}!");
@@ -45,7 +44,7 @@ namespace Chat
 			var onConnected = observables.GetString("UserConnected");
 			var onChat = observables.GetString("Chat");
 			var onFile = observables.GetBinary("File");
-			var onPerson = observables.GetSerialized<Person>("Person");
+			var onPerson = observables.GetSerialized<Person>("Person", jsonSerializer);
 
 			onConnected.Subscribe(m => Connections.AddUser(m.MetaData));
 			onChat.Subscribe(m => Connections.AddUser(m.MetaData));
@@ -133,7 +132,7 @@ namespace Chat
 						int age = 0;
 						int.TryParse(ageStr.Trim(), out age);
 						Person p = new Person() { Name = name, Age = age };						
-						sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, mtdt));
+						sender.Serialized(new EventInfo("Person"), new StringSerializedMessage<Person>(p, mtdt), jsonSerializer);
 					break;
 					default:						
 						sender.String(new EventInfo("Chat"), new StringMessage(message, mtdt));

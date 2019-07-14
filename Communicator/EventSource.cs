@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
-using Communicator.Core;
-using System;
 
 namespace Communicator
 {
     public interface IEventSource 
     {
-        IObservableFactory GetObservablesFactory(IStringDeserializer deserializer);
-        IEventSender GetEventSender(IStringSerializer serializer);
+        IObservableFactory GetObservablesFactory();
+        IEventSender GetEventSender();
         Task<string> GetConnectionId();
         Task Connect();
     }
@@ -36,14 +34,14 @@ namespace Communicator
             return Connection.StartAsync();
         }        
 
-        public IObservableFactory GetObservablesFactory(IStringDeserializer deserializer)
+        public IObservableFactory GetObservablesFactory()
         {
-            return new ObservableFactory(Connection, deserializer);
+            return new ObservableFactory(Connection, new JsonSerializer());
         }
 
-        public IEventSender GetEventSender(IStringSerializer serializer)
+        public IEventSender GetEventSender()
         {
-            return new EventSender(Connection, serializer);
+            return new EventSender(Connection, new JsonSerializer());
         }
 
         public Task<string> GetConnectionId()
