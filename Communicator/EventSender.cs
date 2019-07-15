@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
 using System.Collections.Generic;
 
