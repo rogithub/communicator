@@ -1,24 +1,7 @@
 using System.Threading.Tasks;
 
 namespace Communicator
-{
-    public interface IEventSource 
-    {
-        IObservableFactory GetObservablesFactory();
-        IEventSender GetEventSender();
-        Task<string> GetConnectionId();
-        Task Connect();
-    }
-
-    public static class EventSourceFactory
-    {
-        public static IEventSource Get(string urlServer)
-        {
-            return new EventSource(urlServer);
-        }
-    }
-
-
+{    
     internal class EventSource : IEventSource
     {
         private IHubConnection Connection { get; set; }        
