@@ -1,12 +1,11 @@
 using System;
 using Communicator.Core;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
     internal class StringObservable<T> : ObservableBase<string, T> where T: new()
     {                
-        public StringObservable(HubConnection connection, IStringDeserializer serializer, string eventName)
+        public StringObservable(IHubConnection connection, IStringDeserializer serializer, string eventName)
         : base(connection, serializer, eventName)
         {
             

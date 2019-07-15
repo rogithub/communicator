@@ -1,14 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Communicator.Core;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
     internal abstract class ObservableBase<D, M> : IObservable<IMessage<D, M>>
     {
         protected string EventName { get; set; }
-        protected HubConnection Connection { get; set; }
+        protected IHubConnection Connection { get; set; }
         protected IStringDeserializer DefaultSerializer { get; set; }  
 
         protected void RegisterOnCompleted(IObserver<IMessage<D,M>> observer)
@@ -20,7 +19,7 @@ namespace Communicator.Obserables
             };
         }
         
-        public ObservableBase(HubConnection connection, IStringDeserializer deserializer, string eventName)
+        public ObservableBase(IHubConnection connection, IStringDeserializer deserializer, string eventName)
         {
             this.Connection = connection;
             this.DefaultSerializer = deserializer;

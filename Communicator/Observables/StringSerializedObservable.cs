@@ -1,12 +1,11 @@
 using Communicator.Core;
-using Microsoft.AspNetCore.SignalR.Client;
 using System;
 
 namespace Communicator.Obserables
 {
     internal class StringSerializedObservable<D, M> : ObservableBase<D, M> where D: new() where M : new()
     {                        
-        public StringSerializedObservable(HubConnection connection, IStringDeserializer deserializer, string eventName)
+        public StringSerializedObservable(IHubConnection connection, IStringDeserializer deserializer, string eventName)
         : base(connection, deserializer, eventName)
         {
 
@@ -38,7 +37,7 @@ namespace Communicator.Obserables
     internal class CustomSerializedObservable<D, M> : ObservableBase<D, M> where D: new() where M : new()
     {                
         private IStringDeserializer MetaDeserializer { get; set; }
-        public CustomSerializedObservable(HubConnection connection, string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer)
+        public CustomSerializedObservable(IHubConnection connection, string eventName, IStringDeserializer dataDeserializer, IStringDeserializer metaDeserializer)
         : base(connection, dataDeserializer, eventName)
         {
             this.MetaDeserializer = metaDeserializer;

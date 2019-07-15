@@ -1,5 +1,4 @@
 using System;
-using Microsoft.AspNetCore.SignalR.Client;
 using Communicator.Core;
 using Communicator.Obserables;
 using System.Collections.Generic;
@@ -23,10 +22,10 @@ namespace Communicator
 
     internal class ObservableFactory : IObservableFactory
     {
-        private HubConnection Connection { get; set; }
+        private IHubConnection Connection { get; set; }
         private IStringDeserializer DefaultDeserializer { get; set; }
         
-        public ObservableFactory(HubConnection connection, IStringDeserializer deserializer)
+        public ObservableFactory(IHubConnection connection, IStringDeserializer deserializer)
         {
             this.Connection = connection;
             this.DefaultDeserializer = deserializer; 

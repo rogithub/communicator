@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR.Client;
 using System.Threading.Tasks;
 
 namespace Communicator
@@ -22,7 +21,7 @@ namespace Communicator
 
     internal class EventSource : IEventSource
     {
-        private HubConnection Connection { get; set; }        
+        private IHubConnection Connection { get; set; }        
 
         public EventSource(string urlServer)
         {

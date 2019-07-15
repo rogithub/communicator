@@ -26,9 +26,9 @@ namespace Communicator
 
     internal class EventSender : IEventSender
     {
-        private HubConnection Connection { get; set; }
+        private IHubConnection Connection { get; set; }
         private IStringSerializer DefaultSerializer { get; set; }
-        internal EventSender(HubConnection connection, IStringSerializer serializer)
+        internal EventSender(IHubConnection connection, IStringSerializer serializer)
         {
             this.Connection = connection;  
             this.DefaultSerializer = serializer;

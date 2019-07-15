@@ -1,13 +1,12 @@
 using System;
 using Communicator.Core;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
     internal class BinaryObservable<T> : ObservableBase<byte[], T> where T: new()
     {
        
-        public BinaryObservable(HubConnection connection, IStringDeserializer serializer, string eventName)
+        public BinaryObservable(IHubConnection connection, IStringDeserializer serializer, string eventName)
         : base(connection, serializer, eventName)
         {
             

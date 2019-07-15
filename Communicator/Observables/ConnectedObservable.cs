@@ -1,12 +1,11 @@
 using System;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Communicator.Obserables
 {
     internal class ConnectedObservable : IObservable<string>
     {                
-        protected HubConnection Connection { get; set; }
-        public ConnectedObservable(HubConnection connection)        
+        protected IHubConnection Connection { get; set; }
+        public ConnectedObservable(IHubConnection connection)
         {
             this.Connection = connection;
         }            
