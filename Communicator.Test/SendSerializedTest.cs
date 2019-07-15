@@ -31,6 +31,9 @@ namespace Communicator.Test
             EventSender sender = new EventSender(connection, serializer);
 
             Task<Guid> id = sender.Serialized<Person>(new EventInfo(eventName), message, serializer);
+            id = sender.Serialized<Person>(new EventInfo(eventName), new StringSerializedMessage<Person>(message, metaData), serializer);
+            id = sender.Serialized<Person, List<KeyValue>>(new EventInfo(eventName), new StringSerializedMessage<Person, List<KeyValue>>(message, metaData), serializer);
+            id = sender.Serialized<Person, List<KeyValue>>(new EventInfo(eventName), new StringSerializedMessage<Person, List<KeyValue>>(message, metaData), serializer, serializer);
             
             Assert.Equal(eventId, id.GetAwaiter().GetResult());
         }
