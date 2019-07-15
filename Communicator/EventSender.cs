@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Communicator.Core;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleToAttribute("Communicator.Test")]
 namespace Communicator
 {   
     internal class EventSender : IEventSender
@@ -17,17 +19,17 @@ namespace Communicator
 
         public Task<Guid> Serialized<D, M>(EventInfo info, StringSerializedMessage<D, M> message, IStringSerializer dataSerializer) where D : new() where M : new()
         {
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), dataSerializer.Serialize(message.Data));
+            return Connection.InvokeAsync(EventNames.SendStringTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), dataSerializer.Serialize(message.Data));
         }
         
         public Task<Guid> String<M>(EventInfo info, StringMessage<M> message, IStringSerializer dataSerializer) where M : new()
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), message.Data);
+            return Connection.InvokeAsync(EventNames.SendStringTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), message.Data);
         }        
 
         public Task<Guid> Binary<M>(EventInfo info, BinaryMessage<M> message, IStringSerializer dataSerializer) where M : new()
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendBinaryTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), message.Data);
+            return Connection.InvokeAsync(EventNames.SendBinaryTo, info.EventName, info.To, dataSerializer.Serialize(message.MetaData), message.Data);
         }        
 
         public Task<Guid> Binary(EventInfo info, byte[] data)
@@ -67,7 +69,7 @@ namespace Communicator
             where D : new()
             where M : new()
         {            
-            return Connection.InvokeAsync<Guid>(EventNames.SendStringTo, info.EventName, info.To, metaSerializer.Serialize(message.MetaData), dataSerializer.Serialize(message.Data));
+            return Connection.InvokeAsync(EventNames.SendStringTo, info.EventName, info.To, metaSerializer.Serialize(message.MetaData), dataSerializer.Serialize(message.Data));
         }       
     }
 }

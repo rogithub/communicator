@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleToAttribute("Communicator.Test")]
 namespace Communicator
 {
     internal static class EventNames 

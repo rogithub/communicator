@@ -2,7 +2,9 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
 using Communicator.Core;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleToAttribute("Communicator.Test")]
 namespace Communicator
 {
     internal class JsonSerializer : IDataSerializer

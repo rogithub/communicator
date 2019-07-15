@@ -33,9 +33,9 @@ namespace Communicator
             return HubConnection.On<T>(eventName, action);            
         }
 
-        public Task<T> InvokeAsync<T>(string eventName, object arg1, object arg2, object arg3, object arg4, CancellationToken cancellationToken = default)
+        public Task<Guid> InvokeAsync(string eventName, object arg1, object arg2, object arg3, object arg4, CancellationToken cancellationToken = default)
         {
-            return HubConnection.InvokeAsync<T>(eventName, arg1, arg2, arg3, arg4, cancellationToken);
+            return HubConnection.InvokeAsync<Guid>(eventName, arg1, arg2, arg3, arg4, cancellationToken);
         }
 
         public Task<T> InvokeAsync<T>(string eventName, Action<T> action)
