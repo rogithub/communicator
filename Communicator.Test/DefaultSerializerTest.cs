@@ -23,12 +23,12 @@ namespace Communicator.Test
         {
             var serializer = new JsonSerializer();
             var metadata = new List<KeyValue>();
-            string name = "Rodrigo";
+            string name = "Bob";
             string age = "35";
             metadata.Set("Age", age);
             metadata.Set("Name", name);
 
-            var strMsg = "[{\"Key\":\"Age\",\"Value\":\"35\"},{\"Key\":\"Name\",\"Value\":\"Rodrigo\"}]";
+            var strMsg = "[{\"Key\":\"Age\",\"Value\":\"35\"},{\"Key\":\"Name\",\"Value\":\"Bob\"}]";
 
              Assert.Equal(strMsg, serializer.Serialize(metadata));
              Assert.Equal(name, serializer.Deserialize<List<KeyValue>>(strMsg).Get("Name"));

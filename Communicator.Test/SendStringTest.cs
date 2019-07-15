@@ -14,14 +14,17 @@ namespace Communicator.Test
             var serializer = new JsonSerializer();
             Guid eventId = Guid.NewGuid();
             string eventName = "Chat";
-            string message = "Hola";
+            string message = "Hola";            
             var metaData = new List<KeyValue>();
-            string serializedMetaData = serializer.Serialize(metaData);
+            string serializedMetaData = serializer.Serialize(metaData);            
+            string to = "Bob";
+            var info = new EventInfo(eventName, to, string.Empty);
+
             Func<string, object, object, object, object, Guid> action = (serverAction, o1, o2, o3, o4) => {
 
                 Assert.Equal(EventNames.SendStringTo, serverAction);
                 Assert.Equal(eventName, o1);
-                Assert.Equal(Array.Empty<string>(), o2);
+                Assert.Equal(info.To, o2);                
                 Assert.Equal(serializedMetaData, o3);
                 Assert.Equal(message, o4);
                 return eventId;
@@ -30,9 +33,9 @@ namespace Communicator.Test
             ConnectionMock connection = new ConnectionMock(action);
             EventSender sender = new EventSender(connection, serializer);
 
-            Task<Guid> id = sender.String(new EventInfo(eventName), message);
-            id = sender.String(new EventInfo(eventName), new StringMessage(message, metaData));
-            id = sender.String(new EventInfo(eventName), new StringMessage(message, metaData), serializer);
+            Task<Guid> id = sender.String(info, message);
+            id = sender.String(info, new StringMessage(message, metaData));
+            id = sender.String(info, new StringMessage(message, metaData), serializer);            
             
             Assert.Equal(eventId, id.GetAwaiter().GetResult());
         }        
