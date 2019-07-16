@@ -2,7 +2,9 @@ using System;
 using Communicator.Core;
 using Communicator.Obserables;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleToAttribute("Communicator.Test")]
 namespace Communicator
 {   
     internal class ObservableFactory : IObservableFactory
