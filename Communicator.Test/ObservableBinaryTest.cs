@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Communicator.Test
 {
-    public class ObservableStringTest
+    public class ObservableBinaryTest
     {
         [Fact]
-        public void GetString()
+        public void GetBinary()
         {            
             var serializer = new JsonSerializer();           
-            string eventName = "Chat";
-            string message = "Hola";            
+            string eventName = "File";
+            byte[] message = new byte[] { 1, 2, 3};            
             var metaData = new List<KeyValue>();
             string serializedMetaData = serializer.Serialize(metaData);            
             
             ConnectionMock connection = new ConnectionMock();
             var factory = new ObservableFactory(connection, serializer);
             // Not sending Generic MetaData
-            var observable = factory.GetString(eventName);
+            var observable = factory.GetBinary(eventName);
 
             observable.Subscribe(msg => {
 				Assert.Equal(message, msg.Data);
@@ -28,24 +28,24 @@ namespace Communicator.Test
 			});
             
 
-            var serverEvent = connection.ServerEvents[eventName] as Action<string, string>;
+            var serverEvent = connection.ServerEvents[eventName] as Action<string, byte[]>;
             Assert.NotNull(serverEvent);
             serverEvent(serializedMetaData, message);
         }        
 
         [Fact]
-        public void GetStringGenericMetaData()
+        public void GetBinaryGenericMetaData()
         {            
             var serializer = new JsonSerializer();           
-            string eventName = "Chat";
-            string message = "Hola";            
+            string eventName = "File";
+            byte[] message = new byte[] { 1, 2, 3};            
             var metaData = new List<KeyValue>();
             string serializedMetaData = serializer.Serialize(metaData);            
             
             ConnectionMock connection = new ConnectionMock();
             var factory = new ObservableFactory(connection, serializer);
             // Sending generic T
-            var observable = factory.GetString<List<KeyValue>>(eventName, serializer);
+            var observable = factory.GetBinary<List<KeyValue>>(eventName, serializer);
 
             observable.Subscribe(msg => {
 				Assert.Equal(message, msg.Data);
@@ -53,7 +53,7 @@ namespace Communicator.Test
 			});
             
 
-            var serverEvent = connection.ServerEvents[eventName] as Action<string, string>;
+            var serverEvent = connection.ServerEvents[eventName] as Action<string, byte[]>;
             Assert.NotNull(serverEvent);
             serverEvent(serializedMetaData, message);
         }        
