@@ -19,6 +19,11 @@ namespace Communicator.Test
             string serializedMetaData = serializer.Serialize(metaData);            
             string to = "Bob";
             var info = new EventInfo(eventName, to, string.Empty);
+            Action<object,  string> onMetaSerialized = ( cSharpObj, json ) => {                                
+                Assert.Equal(serializedMetaData, json);
+                Assert.True(cSharpObj is List<KeyValue>);
+            };
+            var metaSerializer = new SerializationMock(onMetaSerialized);
 
             Func<string, object, object, object, object, Guid> action = (serverAction, o1, o2, o3, o4) => {
 
@@ -31,11 +36,11 @@ namespace Communicator.Test
             };
 
             ConnectionMock connection = new ConnectionMock(action);
-            EventSender sender = new EventSender(connection, serializer);
+            EventSender sender = new EventSender(connection, metaSerializer);
 
             Task<Guid> id = sender.String(info, message);
             id = sender.String(info, new StringMessage(message, metaData));
-            id = sender.String(info, new StringMessage(message, metaData), serializer);            
+            id = sender.String(info, new StringMessage(message, metaData), metaSerializer);            
             
             Assert.Equal(eventId, id.GetAwaiter().GetResult());
         }        

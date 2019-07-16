@@ -17,8 +17,14 @@ namespace Communicator.Test
             var metaData = new List<KeyValue>();
             string serializedMetaData = serializer.Serialize(metaData);            
             
+            Action<object,  string> onMetaSerialized = ( cSharpObj, json ) => {                                
+                Assert.Equal(serializedMetaData, json);
+                Assert.True(cSharpObj is List<KeyValue>);
+            };
+            var metaSerializer = new SerializationMock(onMetaSerialized);
+
             ConnectionMock connection = new ConnectionMock();
-            var factory = new ObservableFactory(connection, serializer);
+            var factory = new ObservableFactory(connection, metaSerializer);
             // Not sending Generic MetaData
             var observable = factory.GetBinary(eventName);
 
@@ -41,11 +47,16 @@ namespace Communicator.Test
             byte[] message = new byte[] { 1, 2, 3};            
             var metaData = new List<KeyValue>();
             string serializedMetaData = serializer.Serialize(metaData);            
+            Action<object,  string> onMetaSerialized = ( cSharpObj, json ) => {                                
+                Assert.Equal(serializedMetaData, json);
+                Assert.True(cSharpObj is List<KeyValue>);
+            };
+            var metaSerializer = new SerializationMock(onMetaSerialized);
             
             ConnectionMock connection = new ConnectionMock();
-            var factory = new ObservableFactory(connection, serializer);
+            var factory = new ObservableFactory(connection, metaSerializer);
             // Sending generic T
-            var observable = factory.GetBinary<List<KeyValue>>(eventName, serializer);
+            var observable = factory.GetBinary<List<KeyValue>>(eventName, metaSerializer);
 
             observable.Subscribe(msg => {
 				Assert.Equal(message, msg.Data);
