@@ -87,7 +87,7 @@ namespace Communicator.Test
             Assert.NotNull(serverEvent);
             serverEvent(serializedMetaData, serializedData);
 
-             Assert.Equal(2, serializationCounter);
+            Assert.Equal(2, serializationCounter);
         }
 
 
