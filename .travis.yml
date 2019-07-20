@@ -2,7 +2,6 @@ language: csharp
 mono: none
 dotnet: 2.2.0
 script:
-  - dotnet restore
   - dotnet build ./Server/
   - dotnet build ./Communicator/
   - dotnet build ./Chat/
