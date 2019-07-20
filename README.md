@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/rogithub/communicator.svg?branch=master)](https://travis-ci.org/rogithub/communicator)
 
-[![Coverage Status](https://coveralls.io/repos/github/rogithub/communicator/badge.svg?branch=master)](https://coveralls.io/github/rogithub/communicator?branch=master)
 
 # Communicator
 

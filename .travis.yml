@@ -7,4 +7,4 @@ script:
   - dotnet build ./Server/
   - dotnet build ./Communicator/
   - dotnet build ./Chat/
-  - dotnet test /p:CollectCoverage=true ./Communicator.Test/
+  - dotnet test ./Communicator.Test/
