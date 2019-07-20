@@ -7,4 +7,3 @@ script:
   - dotnet build ./Communicator/
   - dotnet build ./Chat/
   - dotnet test  ./Communicator.Test/
-	
