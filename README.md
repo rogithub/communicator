@@ -1,6 +1,6 @@
-# Communicator
-
 [![Build Status](https://travis-ci.org/rogithub/communicator.svg?branch=master)](https://travis-ci.org/rogithub/communicator)
+
+# Communicator
 
 This is a proof of concept to send events between different dotnet/js applications.
 
