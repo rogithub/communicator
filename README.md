@@ -131,7 +131,9 @@ cd Server
 dotnet run
 ```
 3. Run as many instances of chat as you want.
-You might have to modify url inside Chat/Program.cs to point to your server url.
+You might have to modify url inside Chat/Program.cs to point to your server url. Be sure that your url ends on '/communicator' like this
+`http://localhost:5000/communicator`.
+
 ```bash
 cd Chat
 dotnet run [username]
